@@ -1,3253 +1,2341 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MoodPlay</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoodPlay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      :root {
-        --c0: #08080a;
-        --c1: #0f0f12;
-        --c2: #161619;
-        --c3: #1e1e22;
-        --c4: #2a2a30;
-        --c5: #3a3a42;
-        --c6: #5a5a68;
-        --c7: #8a8a9a;
-        --c8: #b8b8c8;
-        --c9: #e8e8f0;
-        --white: #f6f6f8;
+:root {
+  --c0: #08080A;
+  --c1: #0F0F12;
+  --c2: #161619;
+  --c3: #1E1E22;
+  --c4: #2A2A30;
+  --c5: #3A3A42;
+  --c6: #5A5A68;
+  --c7: #8A8A9A;
+  --c8: #B8B8C8;
+  --c9: #E8E8F0;
+  --white: #F6F6F8;
 
-        --amber: #f2bc52;
-        --amber-dim: rgba(242, 188, 82, 0.1);
-        --amber-glow: rgba(242, 188, 82, 0.06);
-        --jade: #31d99a;
-        --jade-dim: rgba(49, 217, 154, 0.1);
-        --rose: #f06880;
+  --amber: #F2BC52;
+  --amber-dim: rgba(242,188,82,0.10);
+  --amber-glow: rgba(242,188,82,0.06);
+  --jade: #31D99A;
+  --jade-dim: rgba(49,217,154,0.10);
+  --rose: #F06880;
 
-        --mood-bg-1: #0e0a06;
-        --mood-bg-2: #06100e;
-        --mood-glow-1: rgba(180, 120, 40, 0.12);
-        --mood-glow-2: rgba(40, 160, 120, 0.08);
+  --mood-bg-1: #0E0A06;
+  --mood-bg-2: #06100E;
+  --mood-glow-1: rgba(180,120,40,0.12);
+  --mood-glow-2: rgba(40,160,120,0.08);
 
-        --font-serif: "Instrument Serif", Georgia, serif;
-        --font-sans: "DM Sans", -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
 
-        --ease: cubic-bezier(0.16, 1, 0.3, 1);
-        --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-        --slow: cubic-bezier(0.4, 0, 0.2, 1);
-      }
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --slow: cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-      html {
-        height: 100%;
-        background: var(--c0);
-      }
-      body {
-        min-height: 100%;
-        background: var(--c0);
-        color: var(--white);
-        font-family: var(--font-sans);
-        font-size: 14px;
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        overflow: hidden;
-      }
+html {
+  height: 100%;
+  background: var(--c0);
+}
+body {
+  min-height: 100%;
+  background: var(--c0);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
 
-      /* ── Grain overlay ── */
-      body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.045'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 9000;
-      }
+/* ── Grain overlay ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.045'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+}
 
-      /* ══════════════════════════
+/* ══════════════════════════
    SCREEN SYSTEM
 ══════════════════════════ */
-      .scr {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.45s var(--ease);
-        overflow: hidden;
-      }
-      .scr.active {
-        opacity: 1;
-        pointer-events: all;
-      }
+.scr {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s var(--ease);
+  overflow: hidden;
+}
+.scr.active {
+  opacity: 1;
+  pointer-events: all;
+}
 
-      /* Player screen breaks out of the fixed/overflow:hidden mold */
-      #s-player.active {
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-      }
+/* Player screen breaks out of the fixed/overflow:hidden mold */
+#s-player.active {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
 
-      /* ══════════════════════════
+/* ══════════════════════════
    LOGIN
 ══════════════════════════ */
-      #s-login {
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        background: var(--c0);
-        overflow: hidden;
-      }
+#s-login {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--c0);
+  overflow: hidden;
+}
 
-      .login-orb {
-        position: absolute;
-        width: 600px;
-        height: 600px;
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -60%);
-        background: radial-gradient(
-          ellipse at center,
-          rgba(180, 120, 40, 0.14) 0%,
-          rgba(180, 120, 40, 0.06) 40%,
-          transparent 70%
-        );
-        animation: orbFloat 8s ease-in-out infinite;
-        pointer-events: none;
-      }
-      @keyframes orbFloat {
-        0%,
-        100% {
-          transform: translate(-50%, -60%) scale(1);
-        }
-        50% {
-          transform: translate(-50%, -58%) scale(1.06);
-        }
-      }
+.login-orb {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  background: radial-gradient(ellipse at center,
+    rgba(180,120,40,0.14) 0%,
+    rgba(180,120,40,0.06) 40%,
+    transparent 70%);
+  animation: orbFloat 8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(-50%, -60%) scale(1); }
+  50% { transform: translate(-50%, -58%) scale(1.06); }
+}
 
-      .login-inner {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        animation: loginReveal 0.9s var(--ease) both;
-      }
-      @keyframes loginReveal {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+.login-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  animation: loginReveal 0.9s var(--ease) both;
+}
+@keyframes loginReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-      .login-mark {
-        width: 52px;
-        height: 52px;
-        border-radius: 14px;
-        background: var(--amber);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 28px;
-      }
-      .login-mark svg {
-        color: var(--c0);
-      }
+.login-mark {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.login-mark svg { color: var(--c0); }
 
-      .login-headline {
-        font-family: var(--font-serif);
-        font-size: clamp(38px, 6vw, 64px);
-        font-weight: 400;
-        letter-spacing: -0.035em;
-        line-height: 1.08;
-        text-align: center;
-        color: var(--white);
-        margin-bottom: 16px;
-      }
-      .login-headline em {
-        font-style: italic;
-        color: var(--amber);
-      }
+.login-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  text-align: center;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.login-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
 
-      .login-sub {
-        font-size: 16px;
-        font-weight: 300;
-        color: var(--c7);
-        text-align: center;
-        margin-bottom: 52px;
-        letter-spacing: 0.01em;
-      }
+.login-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--c7);
+  text-align: center;
+  margin-bottom: 52px;
+  letter-spacing: 0.01em;
+}
 
-      .login-btn {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 15px 32px;
-        background: var(--c2);
-        border: 0.5px solid rgba(255, 255, 255, 0.1);
-        border-radius: 100px;
-        font-family: var(--font-sans);
-        font-size: 15px;
-        font-weight: 400;
-        color: var(--white);
-        cursor: pointer;
-        transition: all 0.18s var(--ease);
-        letter-spacing: -0.01em;
-        white-space: nowrap;
-      }
-      .login-btn:hover {
-        background: var(--c3);
-        border-color: rgba(255, 255, 255, 0.16);
-        transform: scale(1.02);
-      }
-      .login-btn:active {
-        transform: scale(0.98);
-      }
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 32px;
+  background: var(--c2);
+  border: 0.5px solid rgba(255,255,255,0.10);
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.login-btn:hover {
+  background: var(--c3);
+  border-color: rgba(255,255,255,0.16);
+  transform: scale(1.02);
+}
+.login-btn:active { transform: scale(0.98); }
 
-      .login-legal {
-        margin-top: 24px;
-        font-size: 12px;
-        color: var(--c6);
-        text-align: center;
-        line-height: 1.7;
-      }
-      .login-legal a {
-        color: var(--c7);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-      }
+.login-legal {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--c6);
+  text-align: center;
+  line-height: 1.7;
+}
+.login-legal a { color: var(--c7); text-decoration: underline; text-underline-offset: 3px; }
 
-      /* ══════════════════════════
+/* ══════════════════════════
    ONBOARDING
 ══════════════════════════ */
-      #s-onboard {
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        background: var(--c0);
-      }
+#s-onboard {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--c0);
+}
 
-      .ob-wrap {
-        width: 100%;
-        max-width: 480px;
-        padding: 0 24px;
-      }
-      .ob-step-indicator {
-        display: flex;
-        gap: 5px;
-        margin-bottom: 44px;
-        justify-content: center;
-      }
-      .ob-step-dot {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background: var(--c4);
-        transition: all 0.3s var(--ease);
-      }
-      .ob-step-dot.on {
-        background: var(--amber);
-        transform: scale(1.4);
-      }
+.ob-wrap {
+  width: 100%;
+  max-width: 480px;
+  padding: 0 24px;
+}
+.ob-step-indicator {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 44px;
+  justify-content: center;
+}
+.ob-step-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c4);
+  transition: all 0.3s var(--ease);
+}
+.ob-step-dot.on { background: var(--amber); transform: scale(1.4); }
 
-      .ob-question {
-        font-family: var(--font-serif);
-        font-size: clamp(26px, 4vw, 38px);
-        font-weight: 400;
-        letter-spacing: -0.03em;
-        line-height: 1.2;
-        color: var(--white);
-        text-align: center;
-        margin-bottom: 8px;
-      }
-      .ob-hint {
-        font-size: 14px;
-        font-weight: 300;
-        color: var(--c7);
-        text-align: center;
-        margin-bottom: 40px;
-      }
+.ob-question {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.ob-hint {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--c7);
+  text-align: center;
+  margin-bottom: 40px;
+}
 
-      .ob-venue-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        margin-bottom: 36px;
-      }
-      .ob-venue-tile {
-        border: 0.5px solid rgba(255, 255, 255, 0.07);
-        border-radius: 16px;
-        padding: 20px 12px 16px;
-        background: var(--c1);
-        cursor: pointer;
-        transition: all 0.15s var(--ease);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        user-select: none;
-      }
-      .ob-venue-tile:hover {
-        background: var(--c2);
-        border-color: rgba(255, 255, 255, 0.12);
-      }
-      .ob-venue-tile.on {
-        background: var(--amber-dim);
-        border-color: rgba(242, 188, 82, 0.3);
-      }
-      .ob-venue-tile-icon {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--c7);
-        transition: color 0.15s;
-      }
-      .ob-venue-tile.on .ob-venue-tile-icon {
-        color: var(--amber);
-      }
-      .ob-venue-tile-label {
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--c7);
-        transition: color 0.15s;
-      }
-      .ob-venue-tile.on .ob-venue-tile-label {
-        color: var(--amber);
-      }
+.ob-venue-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 36px;
+}
+.ob-venue-tile {
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 20px 12px 16px;
+  background: var(--c1);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+.ob-venue-tile:hover { background: var(--c2); border-color: rgba(255,255,255,0.12); }
+.ob-venue-tile.on { background: var(--amber-dim); border-color: rgba(242,188,82,0.3); }
+.ob-venue-tile-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c7);
+  transition: color 0.15s;
+}
+.ob-venue-tile.on .ob-venue-tile-icon { color: var(--amber); }
+.ob-venue-tile-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--c7);
+  transition: color 0.15s;
+}
+.ob-venue-tile.on .ob-venue-tile-label { color: var(--amber); }
 
-      .ob-brand-row {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 40px;
-      }
-      .ob-brand-opt {
-        flex: 1;
-        padding: 14px 12px;
-        border: 0.5px solid rgba(255, 255, 255, 0.07);
-        border-radius: 12px;
-        background: var(--c1);
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.15s;
-        user-select: none;
-      }
-      .ob-brand-opt-name {
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--c7);
-        margin-bottom: 2px;
-        transition: color 0.15s;
-      }
-      .ob-brand-opt-desc {
-        font-size: 11px;
-        color: var(--c5);
-        transition: color 0.15s;
-      }
-      .ob-brand-opt.on {
-        background: var(--amber-dim);
-        border-color: rgba(242, 188, 82, 0.3);
-      }
-      .ob-brand-opt.on .ob-brand-opt-name {
-        color: var(--amber);
-      }
-      .ob-brand-opt.on .ob-brand-opt-desc {
-        color: rgba(242, 188, 82, 0.6);
-      }
+.ob-brand-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.ob-brand-opt {
+  flex: 1;
+  padding: 14px 12px;
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  background: var(--c1);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.ob-brand-opt-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--c7);
+  margin-bottom: 2px;
+  transition: color 0.15s;
+}
+.ob-brand-opt-desc {
+  font-size: 11px;
+  color: var(--c5);
+  transition: color 0.15s;
+}
+.ob-brand-opt.on { background: var(--amber-dim); border-color: rgba(242,188,82,0.3); }
+.ob-brand-opt.on .ob-brand-opt-name { color: var(--amber); }
+.ob-brand-opt.on .ob-brand-opt-desc { color: rgba(242,188,82,0.6); }
 
-      .ob-input {
-        width: 100%;
-        background: var(--c1);
-        border: 0.5px solid rgba(255, 255, 255, 0.09);
-        border-radius: 12px;
-        padding: 14px 18px;
-        font-family: var(--font-sans);
-        font-size: 16px;
-        font-weight: 300;
-        color: var(--white);
-        outline: none;
-        transition: all 0.15s;
-        margin-bottom: 36px;
-      }
-      .ob-input::placeholder {
-        color: var(--c5);
-      }
-      .ob-input:focus {
-        border-color: rgba(242, 188, 82, 0.4);
-        background: var(--c2);
-      }
+.ob-input {
+  width: 100%;
+  background: var(--c1);
+  border: 0.5px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--white);
+  outline: none;
+  transition: all 0.15s;
+  margin-bottom: 36px;
+}
+.ob-input::placeholder { color: var(--c5); }
+.ob-input:focus { border-color: rgba(242,188,82,0.4); background: var(--c2); }
 
-      .ob-cta {
-        width: 100%;
-        padding: 16px;
-        background: var(--amber);
-        border: none;
-        border-radius: 100px;
-        font-family: var(--font-sans);
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--c0);
-        cursor: pointer;
-        transition: all 0.18s var(--ease);
-        letter-spacing: -0.01em;
-      }
-      .ob-cta:hover {
-        background: #f5c96a;
-        transform: scale(1.01);
-      }
-      .ob-cta:active {
-        transform: scale(0.98);
-      }
+.ob-cta {
+  width: 100%;
+  padding: 16px;
+  background: var(--amber);
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--c0);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  letter-spacing: -0.01em;
+}
+.ob-cta:hover { background: #F5C96A; transform: scale(1.01); }
+.ob-cta:active { transform: scale(0.98); }
 
-      .ob-back {
-        display: block;
-        text-align: center;
-        margin-top: 16px;
-        font-size: 13px;
-        color: var(--c6);
-        cursor: pointer;
-        transition: color 0.12s;
-      }
-      .ob-back:hover {
-        color: var(--c7);
-      }
+.ob-back {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--c6);
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.ob-back:hover { color: var(--c7); }
 
-      /* ══════════════════════════════════════════
+/* ══════════════════════════════════════════
    PLAYER — hero screen
 ══════════════════════════════════════════ */
-      #s-player {
-        flex-direction: column;
-        position: relative;
-        background: var(--c0);
-        /* Do NOT set height or overflow here — handled by .scr overrides above */
-      }
+#s-player {
+  flex-direction: column;
+  position: relative;
+  background: var(--c0);
+  /* Do NOT set height or overflow here — handled by .scr overrides above */
+}
 
-      /* Inner scroll wrapper — the actual scrollable document */
-      .player-scroll {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
+/* Inner scroll wrapper — the actual scrollable document */
+.player-scroll {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-      /* ── Ambient canvas: fixed full-screen, scrolls behind content ── */
-      .player-canvas {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        overflow: hidden;
-        pointer-events: none;
-      }
-      .canvas-blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(90px);
-        transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform, opacity, background;
-      }
-      .blob-a {
-        width: 55vmax;
-        height: 55vmax;
-        top: -18%;
-        left: -12%;
-        animation: blobDrift 22s ease-in-out infinite alternate;
-      }
-      .blob-b {
-        width: 40vmax;
-        height: 40vmax;
-        bottom: -10%;
-        right: -8%;
-        animation: blobDrift 28s ease-in-out infinite alternate-reverse;
-      }
-      .blob-c {
-        width: 30vmax;
-        height: 30vmax;
-        top: 30%;
-        left: 35%;
-        transform: translate(-50%, -50%);
-        animation: blobDrift 18s ease-in-out infinite alternate;
-      }
-      @keyframes blobDrift {
-        0% {
-          transform: translate(0, 0) scale(1);
-        }
-        33% {
-          transform: translate(4%, -3%) scale(1.04);
-        }
-        66% {
-          transform: translate(-3%, 4%) scale(0.97);
-        }
-        100% {
-          transform: translate(5%, 2%) scale(1.03);
-        }
-      }
-      /* warm */
-      #s-player.mood-warm .blob-a {
-        background: rgba(180, 100, 20, 0.28);
-      }
-      #s-player.mood-warm .blob-b {
-        background: rgba(140, 70, 10, 0.15);
-      }
-      #s-player.mood-warm .blob-c {
-        background: rgba(210, 150, 40, 0.1);
-      }
-      /* cool */
-      #s-player.mood-cool .blob-a {
-        background: rgba(20, 80, 160, 0.24);
-      }
-      #s-player.mood-cool .blob-b {
-        background: rgba(10, 50, 120, 0.14);
-      }
-      #s-player.mood-cool .blob-c {
-        background: rgba(40, 120, 200, 0.09);
-      }
-      /* green */
-      #s-player.mood-green .blob-a {
-        background: rgba(15, 110, 70, 0.22);
-      }
-      #s-player.mood-green .blob-b {
-        background: rgba(10, 80, 50, 0.14);
-      }
-      #s-player.mood-green .blob-c {
-        background: rgba(30, 160, 100, 0.09);
-      }
-      /* night */
-      #s-player.mood-night .blob-a {
-        background: rgba(50, 20, 100, 0.24);
-      }
-      #s-player.mood-night .blob-b {
-        background: rgba(80, 30, 130, 0.14);
-      }
-      #s-player.mood-night .blob-c {
-        background: rgba(30, 10, 80, 0.1);
-      }
+/* ── Ambient canvas: fixed full-screen, scrolls behind content ── */
+.player-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.canvas-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity, background;
+}
+.blob-a {
+  width: 55vmax; height: 55vmax;
+  top: -18%; left: -12%;
+  animation: blobDrift 22s ease-in-out infinite alternate;
+}
+.blob-b {
+  width: 40vmax; height: 40vmax;
+  bottom: -10%; right: -8%;
+  animation: blobDrift 28s ease-in-out infinite alternate-reverse;
+}
+.blob-c {
+  width: 30vmax; height: 30vmax;
+  top: 30%; left: 35%;
+  transform: translate(-50%, -50%);
+  animation: blobDrift 18s ease-in-out infinite alternate;
+}
+@keyframes blobDrift {
+  0%   { transform: translate(0,    0)    scale(1);    }
+  33%  { transform: translate(4%,   -3%)  scale(1.04); }
+  66%  { transform: translate(-3%,  4%)   scale(0.97); }
+  100% { transform: translate(5%,   2%)   scale(1.03); }
+}
+/* warm */
+#s-player.mood-warm .blob-a  { background: rgba(180,100,20,0.28); }
+#s-player.mood-warm .blob-b  { background: rgba(140,70,10,0.15); }
+#s-player.mood-warm .blob-c  { background: rgba(210,150,40,0.10); }
+/* cool */
+#s-player.mood-cool .blob-a  { background: rgba(20,80,160,0.24); }
+#s-player.mood-cool .blob-b  { background: rgba(10,50,120,0.14); }
+#s-player.mood-cool .blob-c  { background: rgba(40,120,200,0.09); }
+/* green */
+#s-player.mood-green .blob-a { background: rgba(15,110,70,0.22); }
+#s-player.mood-green .blob-b { background: rgba(10,80,50,0.14); }
+#s-player.mood-green .blob-c { background: rgba(30,160,100,0.09); }
+/* night */
+#s-player.mood-night .blob-a { background: rgba(50,20,100,0.24); }
+#s-player.mood-night .blob-b { background: rgba(80,30,130,0.14); }
+#s-player.mood-night .blob-c { background: rgba(30,10,80,0.10); }
 
-      /* Vignette — fixed so it always covers viewport during scroll */
-      .player-vignette {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        background: radial-gradient(
-            ellipse 100% 100% at 50% 50%,
-            transparent 40%,
-            rgba(8, 8, 10, 0.7) 100%
-          ),
-          linear-gradient(
-            to bottom,
-            rgba(8, 8, 10, 0.3) 0%,
-            transparent 18%,
-            transparent 70%,
-            rgba(8, 8, 10, 0.85) 100%
-          );
-        pointer-events: none;
-      }
+/* Vignette — fixed so it always covers viewport during scroll */
+.player-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(8,8,10,0.7) 100%),
+    linear-gradient(to bottom, rgba(8,8,10,0.3) 0%, transparent 18%, transparent 70%, rgba(8,8,10,0.85) 100%);
+  pointer-events: none;
+}
 
-      /* ── Top bar ── */
-      .player-topbar {
-        position: relative;
-        z-index: 20;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 28px 36px 0;
-        flex-shrink: 0;
-      }
-      .ptb-venue {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        cursor: pointer;
-        padding: 6px 0;
-      }
-      .ptb-venue-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--jade);
-        box-shadow: 0 0 8px rgba(49, 217, 154, 0.6);
-        animation: pulse 2.5s ease-in-out infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.5;
-          transform: scale(0.65);
-        }
-      }
-      .ptb-venue-name {
-        font-size: 13px;
-        font-weight: 400;
-        color: rgba(246, 246, 248, 0.6);
-        letter-spacing: 0.01em;
-        transition: color 0.18s;
-      }
-      .ptb-venue:hover .ptb-venue-name {
-        color: var(--white);
-      }
-      .ptb-venue-chevron {
-        color: rgba(255, 255, 255, 0.25);
-        transition: color 0.18s;
-      }
-      .ptb-venue:hover .ptb-venue-chevron {
-        color: rgba(255, 255, 255, 0.5);
-      }
-      .ptb-right {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-      .ptb-icon-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.3);
-        transition: all 0.15s;
-      }
-      .ptb-icon-btn:hover {
-        color: rgba(255, 255, 255, 0.7);
-        background: rgba(255, 255, 255, 0.06);
-      }
+/* ── Background visualizer — full-width, behind all content ── */
+.bg-viz {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  /* Vertically centered — sits in the visual middle of the screen */
+  top: 50%;
+  transform: translateY(-50%);
+  height: 160px;
+  opacity: 0.18;
+  pointer-events: none;
+  display: block;
+  transition: opacity 1s;
+}
+#s-player.paused .bg-viz { opacity: 0.08; }
 
-      /* Topbar volume control */
-      .ptb-vol {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-right: 4px;
-      }
-      .ptb-vol-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.28);
-        transition: color 0.15s;
-        flex-shrink: 0;
-        padding: 0;
-      }
-      .ptb-vol-icon:hover {
-        color: rgba(255, 255, 255, 0.65);
-      }
-      .ptb-vol-rail {
-        width: 72px;
-        height: 2px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 100px;
-        position: relative;
-        cursor: pointer;
-        transition: height 0.15s;
-      }
-      .ptb-vol-rail:hover {
-        height: 3px;
-      }
-      .ptb-vol-fill {
-        height: 100%;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 100px;
-        transition: width 0.06s, background 4s;
-        pointer-events: none;
-      }
-      #s-player.mood-warm .ptb-vol-fill {
-        background: rgba(242, 188, 82, 0.55);
-      }
-      #s-player.mood-cool .ptb-vol-fill {
-        background: rgba(91, 168, 232, 0.55);
-      }
-      #s-player.mood-green .ptb-vol-fill {
-        background: rgba(49, 217, 154, 0.55);
-      }
-      #s-player.mood-night .ptb-vol-fill {
-        background: rgba(168, 130, 232, 0.55);
-      }
-      .ptb-vol-input {
-        position: absolute;
-        inset: -8px 0;
-        opacity: 0;
-        cursor: pointer;
-        width: 100%;
-      }
-      /* Hide slider text on very narrow screens, keep icon */
-      @media (max-width: 480px) {
-        .ptb-vol-rail {
-          display: none;
-        }
-      }
 
-      /* ── Stage: padding-based vertical rhythm — centers on tall screens, scrolls on short ── */
-      .player-stage {
-        position: relative;
-        z-index: 20;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 32px 40px 24px;
-        min-height: 0;
-        gap: 0;
-        /* On tall viewports, push content toward center */
-        justify-content: center;
-      }
+   No icons. No rain. Pure feeling.
+══════════════════════════════════════════ */
 
-      /* ── Hero traffic control — sits above orb for traffic-type venues ── */
-      .hero-traffic {
-        display: none; /* shown via JS for relevant venue types */
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 32px;
-        flex-shrink: 0;
-      }
-      .hero-traffic.visible {
-        display: flex;
-      }
-      .hero-traffic-opts {
-        display: flex;
-        gap: 8px;
-      }
-      .hero-opt {
-        padding: 8px 24px;
-        border-radius: 100px;
-        border: 0.5px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.05);
-        font-family: var(--font-sans);
-        font-size: 13px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.38);
-        cursor: pointer;
-        letter-spacing: 0.01em;
-        transition: all 0.15s var(--ease);
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .hero-opt:hover {
-        background: rgba(255, 255, 255, 0.09);
-        color: rgba(255, 255, 255, 0.75);
-        border-color: rgba(255, 255, 255, 0.18);
-      }
-      .hero-opt.on {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.22);
-        color: var(--white);
-      }
-      #s-player.mood-warm .hero-opt.on {
-        background: rgba(242, 188, 82, 0.14);
-        border-color: rgba(242, 188, 82, 0.35);
-        color: rgba(242, 188, 82, 0.92);
-      }
-      #s-player.mood-cool .hero-opt.on {
-        background: rgba(91, 168, 232, 0.13);
-        border-color: rgba(91, 168, 232, 0.3);
-        color: rgba(91, 168, 232, 0.92);
-      }
-      #s-player.mood-green .hero-opt.on {
-        background: rgba(49, 217, 154, 0.12);
-        border-color: rgba(49, 217, 154, 0.28);
-        color: rgba(49, 217, 154, 0.92);
-      }
-      #s-player.mood-night .hero-opt.on {
-        background: rgba(168, 130, 232, 0.13);
-        border-color: rgba(168, 130, 232, 0.3);
-        color: rgba(168, 130, 232, 0.92);
-      }
-      .hero-opt:active {
-        transform: scale(0.95);
-      }
+/* ── Base weather layer ── */
+.weather-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 5s cubic-bezier(0.4, 0, 0.2, 1),
+              background 5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  opacity: 0;
+}
 
-      /* ── Orb: constrained by both vw and vh ── */
-      .orb-system {
-        position: relative;
-        width: min(240px, 34vw, 30vh);
-        height: min(240px, 34vw, 30vh);
-        margin-bottom: 40px;
-        flex-shrink: 0;
-      }
-      /* Rings */
-      .orb-ring {
-        position: absolute;
-        border-radius: 50%;
-        border: 0.5px solid transparent;
-        transition: border-color 4s cubic-bezier(0.4, 0, 0.2, 1), opacity 4s;
-      }
-      .orb-ring-1 {
-        inset: 0;
-        border-color: rgba(255, 255, 255, 0.055);
-        animation: ringRotate 32s linear infinite;
-      }
-      .orb-ring-2 {
-        inset: 10%;
-        border-color: rgba(255, 255, 255, 0.04);
-        animation: ringRotate 22s linear infinite reverse;
-      }
-      .orb-ring-3 {
-        inset: 22%;
-        border-color: rgba(255, 255, 255, 0.06);
-        animation: ringRotate 16s linear infinite;
-      }
-      /* Subtle tick marks on ring 1 */
-      .orb-ring-1::before {
-        content: "";
-        position: absolute;
-        top: -1px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 1px;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.18);
-        border-radius: 1px;
-      }
-      .orb-ring-1::after {
-        content: "";
-        position: absolute;
-        bottom: -1px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 1px;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 1px;
-      }
-      @keyframes ringRotate {
-        to {
-          transform: rotate(360deg);
-        }
-      }
+/* ══ SUNNY ══
+   Warm golden light streaming from upper-left.
+   Higher blob opacity — the scene is lit.
+   Blob animations stay alive and confident. */
+#s-player.weather-sunny .weather-layer {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 8%,
+      rgba(255, 210, 100, 0.09) 0%,
+      rgba(240, 180, 60, 0.04) 45%,
+      transparent 75%),
+    radial-gradient(ellipse 40% 30% at 85% 90%,
+      rgba(180, 100, 20, 0.05) 0%,
+      transparent 70%);
+}
+/* Sunny: richer, warmer blobs */
+#s-player.mood-warm.weather-sunny .blob-a  { background: rgba(200,115,25,0.34); }
+#s-player.mood-warm.weather-sunny .blob-b  { background: rgba(160,85,15,0.20); }
+#s-player.mood-warm.weather-sunny .blob-c  { background: rgba(230,165,45,0.14); }
+#s-player.mood-cool.weather-sunny .blob-a  { background: rgba(40,100,180,0.28); }
+#s-player.mood-cool.weather-sunny .blob-c  { background: rgba(200,160,60,0.08); }
+#s-player.mood-green.weather-sunny .blob-a { background: rgba(20,130,80,0.28); }
+#s-player.mood-green.weather-sunny .blob-c { background: rgba(220,180,50,0.08); }
+#s-player.mood-night.weather-sunny .blob-a { background: rgba(60,25,110,0.28); }
+/* Sunny blobs drift a touch faster — energy */
+#s-player.weather-sunny .blob-a { animation-duration: 18s; }
+#s-player.weather-sunny .blob-b { animation-duration: 22s; }
+#s-player.weather-sunny .blob-c { animation-duration: 14s; }
 
-      /* Core: the glow heart */
-      .orb-core {
-        position: absolute;
-        inset: 32%;
-        border-radius: 50%;
-        transition: background 3.5s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 3.5s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .orb-core.warm {
-        background: radial-gradient(
-          circle,
-          rgba(220, 148, 48, 0.6) 0%,
-          rgba(170, 95, 22, 0.35) 55%,
-          transparent 80%
-        );
-        box-shadow: 0 0 50px rgba(200, 130, 38, 0.35),
-          0 0 100px rgba(170, 95, 22, 0.18),
-          inset 0 0 24px rgba(240, 180, 60, 0.12);
-      }
-      .orb-core.cool {
-        background: radial-gradient(
-          circle,
-          rgba(60, 130, 210, 0.55) 0%,
-          rgba(30, 80, 160, 0.32) 55%,
-          transparent 80%
-        );
-        box-shadow: 0 0 50px rgba(50, 110, 200, 0.32),
-          0 0 100px rgba(30, 70, 150, 0.16),
-          inset 0 0 24px rgba(80, 150, 240, 0.1);
-      }
-      .orb-core.green {
-        background: radial-gradient(
-          circle,
-          rgba(40, 185, 125, 0.55) 0%,
-          rgba(18, 130, 80, 0.32) 55%,
-          transparent 80%
-        );
-        box-shadow: 0 0 50px rgba(35, 170, 110, 0.32),
-          0 0 100px rgba(15, 110, 65, 0.16),
-          inset 0 0 24px rgba(50, 200, 130, 0.1);
-      }
-      .orb-core.night {
-        background: radial-gradient(
-          circle,
-          rgba(100, 55, 175, 0.55) 0%,
-          rgba(60, 28, 120, 0.32) 55%,
-          transparent 80%
-        );
-        box-shadow: 0 0 50px rgba(90, 45, 160, 0.32),
-          0 0 100px rgba(55, 25, 110, 0.16),
-          inset 0 0 24px rgba(120, 70, 200, 0.1);
-      }
+/* ══ CLOUDY ══
+   Neutral diffused light. Lower contrast.
+   Desaturated, flat, balanced. Calm. */
+#s-player.weather-cloudy .weather-layer {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%,
+      rgba(160, 165, 180, 0.07) 0%,
+      rgba(120, 125, 140, 0.03) 50%,
+      transparent 80%);
+}
+/* Cloudy: softer, greyer blobs */
+#s-player.mood-warm.weather-cloudy .blob-a  { background: rgba(140,85,20,0.18); }
+#s-player.mood-warm.weather-cloudy .blob-b  { background: rgba(110,60,10,0.10); }
+#s-player.mood-warm.weather-cloudy .blob-c  { background: rgba(160,120,40,0.07); }
+#s-player.mood-cool.weather-cloudy .blob-a  { background: rgba(20,65,130,0.16); }
+#s-player.mood-cool.weather-cloudy .blob-b  { background: rgba(10,40,100,0.10); }
+#s-player.mood-cool.weather-cloudy .blob-c  { background: rgba(35,90,160,0.06); }
+#s-player.mood-green.weather-cloudy .blob-a { background: rgba(12,85,55,0.15); }
+#s-player.mood-green.weather-cloudy .blob-c { background: rgba(22,120,78,0.06); }
+#s-player.mood-night.weather-cloudy .blob-a { background: rgba(40,18,85,0.18); }
+/* Cloudy blobs drift slower — heavy air */
+#s-player.weather-cloudy .blob-a { animation-duration: 30s; }
+#s-player.weather-cloudy .blob-b { animation-duration: 38s; }
+#s-player.weather-cloudy .blob-c { animation-duration: 26s; }
 
-      /* Visualizer bars — refined, taller, more musical */
-      .orb-bars {
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        gap: 3px;
-        height: 22px;
-      }
-      .ob {
-        width: 2.5px;
-        border-radius: 2px;
-        background: rgba(255, 255, 255, 0.65);
-        transform-origin: bottom;
-        animation: obAnim var(--d, 1.3s) ease-in-out var(--delay, 0s) infinite;
-        transition: opacity 0.5s;
-      }
-      .ob:nth-child(1) {
-        --d: 1.4s;
-        --delay: 0s;
-        height: 7px;
-      }
-      .ob:nth-child(2) {
-        --d: 1.1s;
-        --delay: 0.08s;
-        height: 13px;
-      }
-      .ob:nth-child(3) {
-        --d: 1.6s;
-        --delay: 0.16s;
-        height: 9px;
-      }
-      .ob:nth-child(4) {
-        --d: 1.2s;
-        --delay: 0.04s;
-        height: 18px;
-      }
-      .ob:nth-child(5) {
-        --d: 1.5s;
-        --delay: 0.2s;
-        height: 11px;
-      }
-      .ob:nth-child(6) {
-        --d: 1s;
-        --delay: 0.12s;
-        height: 16px;
-      }
-      .ob:nth-child(7) {
-        --d: 1.3s;
-        --delay: 0.24s;
-        height: 8px;
-      }
-      @keyframes obAnim {
-        0%,
-        100% {
-          transform: scaleY(0.28);
-          opacity: 0.35;
-        }
-        50% {
-          transform: scaleY(1);
-          opacity: 1;
-        }
-      }
-      .ob.paused {
-        animation-play-state: paused;
-        transform: scaleY(0.22);
-        opacity: 0.18;
-      }
+/* ══ RAIN ══
+   Cool, dark, desaturated. Blue-grey tones.
+   Heavy atmosphere. Low brightness. Quiet. */
+#s-player.weather-rain .weather-layer {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 0%,
+      rgba(30, 60, 110, 0.12) 0%,
+      rgba(20, 40, 80, 0.06) 40%,
+      transparent 70%),
+    linear-gradient(to bottom,
+      rgba(15, 25, 50, 0.10) 0%,
+      transparent 50%);
+}
+/* Rain: cooler, dimmer, desaturated blobs */
+#s-player.mood-warm.weather-rain .blob-a  { background: rgba(80,70,30,0.16); }
+#s-player.mood-warm.weather-rain .blob-b  { background: rgba(50,50,20,0.10); }
+#s-player.mood-warm.weather-rain .blob-c  { background: rgba(60,80,90,0.08); }
+#s-player.mood-cool.weather-rain .blob-a  { background: rgba(15,55,120,0.22); }
+#s-player.mood-cool.weather-rain .blob-b  { background: rgba(10,35,90,0.14); }
+#s-player.mood-cool.weather-rain .blob-c  { background: rgba(25,70,140,0.09); }
+#s-player.mood-green.weather-rain .blob-a { background: rgba(10,70,50,0.16); }
+#s-player.mood-green.weather-rain .blob-c { background: rgba(20,80,110,0.08); }
+#s-player.mood-night.weather-rain .blob-a { background: rgba(25,12,70,0.20); }
+#s-player.mood-night.weather-rain .blob-b { background: rgba(15,20,80,0.14); }
+/* Rain blobs move very slowly — heavy, still */
+#s-player.weather-rain .blob-a { animation-duration: 40s; }
+#s-player.weather-rain .blob-b { animation-duration: 52s; }
+#s-player.weather-rain .blob-c { animation-duration: 34s; }
+/* Rain: slightly darker background */
+#s-player.weather-rain { background: #060608; }
 
-      /* ── Track identity — the typographic hero ── */
-      .track-identity {
-        text-align: center;
-        width: 100%;
-        max-width: 560px;
-        margin-bottom: 44px;
-      }
-      .track-mood-line {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 18px;
-      }
-      .mood-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 11px;
-        font-weight: 400;
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.32);
-        transition: color 4s var(--slow);
-      }
-      .mood-tag-accent {
-        color: var(--amber);
-        transition: color 4s var(--slow);
-      }
-      #s-player.mood-cool .mood-tag-accent {
-        color: #5ba8e8;
-      }
-      #s-player.mood-green .mood-tag-accent {
-        color: var(--jade);
-      }
-      #s-player.mood-night .mood-tag-accent {
-        color: #a882e8;
-      }
-      .mood-tag-sep {
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.15);
-        flex-shrink: 0;
-      }
-      .track-title {
-        font-family: var(--font-serif);
-        font-size: clamp(28px, 5vw, 58px);
-        font-weight: 400;
-        letter-spacing: -0.04em;
-        line-height: 1.06;
-        color: var(--white);
-        margin-bottom: 12px;
-        transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
-      }
-      .track-title.changing {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      .track-artist {
-        font-size: 15px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.38);
-        letter-spacing: 0.02em;
-        transition: opacity 0.35s var(--ease);
-      }
-      .track-artist.changing {
-        opacity: 0;
-      }
+/* ══ NIGHT ══
+   Deeper. More focused glow from center.
+   Higher contrast between light and dark.
+   Intimate, immersive, still. */
+#s-player.weather-night .weather-layer {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 40%,
+      rgba(80, 60, 120, 0.08) 0%,
+      rgba(40, 30, 70, 0.04) 55%,
+      transparent 80%),
+    linear-gradient(to bottom,
+      rgba(4, 4, 8, 0.20) 0%,
+      transparent 30%,
+      transparent 65%,
+      rgba(4, 4, 8, 0.30) 100%);
+}
+/* Night: deeper, more focused blobs */
+#s-player.mood-warm.weather-night .blob-a  { background: rgba(150,80,15,0.26); }
+#s-player.mood-warm.weather-night .blob-b  { background: rgba(100,50,8,0.16); }
+#s-player.mood-warm.weather-night .blob-c  { background: rgba(180,120,30,0.10); }
+#s-player.mood-cool.weather-night .blob-a  { background: rgba(18,65,145,0.26); }
+#s-player.mood-cool.weather-night .blob-b  { background: rgba(10,40,110,0.16); }
+#s-player.mood-cool.weather-night .blob-c  { background: rgba(30,90,180,0.10); }
+#s-player.mood-green.weather-night .blob-a { background: rgba(12,90,58,0.22); }
+#s-player.mood-night.weather-night .blob-a { background: rgba(65,28,130,0.30); }
+#s-player.mood-night.weather-night .blob-b { background: rgba(90,35,150,0.18); }
+/* Night blobs drift slowly, deliberately */
+#s-player.weather-night .blob-a { animation-duration: 34s; }
+#s-player.weather-night .blob-b { animation-duration: 44s; }
+#s-player.weather-night .blob-c { animation-duration: 26s; }
+/* Night: vignette is deeper */
+#s-player.weather-night .player-vignette {
+  background:
+    radial-gradient(ellipse 90% 90% at 50% 50%, transparent 30%, rgba(4,4,8,0.80) 100%),
+    linear-gradient(to bottom, rgba(4,4,8,0.35) 0%, transparent 20%, transparent 60%, rgba(4,4,8,0.92) 100%);
+}
 
-      /* ── Progress: surgical 1.5px line ── */
-      .track-progress {
-        width: 100%;
-        max-width: 420px;
-        margin-bottom: 40px;
-        user-select: none;
-      }
-      .prog-rail {
-        height: 1.5px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 100px;
-        cursor: pointer;
-        position: relative;
-        transition: height 0.18s;
-      }
-      .prog-rail:hover {
-        height: 3px;
-      }
-      .prog-fill {
-        height: 100%;
-        border-radius: 100px;
-        transition: width 0.1s linear, background 4s;
-        position: relative;
-      }
-      #s-player.mood-warm .prog-fill {
-        background: rgba(242, 188, 82, 0.85);
-      }
-      #s-player.mood-cool .prog-fill {
-        background: rgba(91, 168, 232, 0.85);
-      }
-      #s-player.mood-green .prog-fill {
-        background: rgba(49, 217, 154, 0.85);
-      }
-      #s-player.mood-night .prog-fill {
-        background: rgba(168, 130, 232, 0.85);
-      }
-      .prog-fill::after {
-        content: "";
-        position: absolute;
-        right: -5px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-        background: var(--white);
-        opacity: 0;
-        transition: opacity 0.15s;
-      }
-      .prog-rail:hover .prog-fill::after {
-        opacity: 1;
-      }
-      .prog-times {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 9px;
-        font-size: 11px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.22);
-        letter-spacing: 0.03em;
-      }
+/* ── Top bar ── */
+.player-topbar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 36px 0;
+  flex-shrink: 0;
+}
+.ptb-venue {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  padding: 6px 0;
+}
+.ptb-venue-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: 0 0 8px rgba(49,217,154,0.6);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.65)} }
+.ptb-venue-name {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(246,246,248,0.6);
+  letter-spacing: 0.01em;
+  transition: color 0.18s;
+}
+.ptb-venue:hover .ptb-venue-name { color: var(--white); }
+.ptb-venue-chevron { color: rgba(255,255,255,0.25); transition: color 0.18s; }
+.ptb-venue:hover .ptb-venue-chevron { color: rgba(255,255,255,0.5); }
+.ptb-right { display: flex; align-items: center; gap: 4px; }
+.ptb-icon-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.3);
+  transition: all 0.15s;
+}
+.ptb-icon-btn:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); }
 
-      /* ── Controls: ultra-minimal strip ── */
-      .ctrl-strip {
-        display: flex;
-        align-items: center;
-        gap: 0;
-        margin-bottom: 32px;
-      }
-      .ctrl-prev,
-      .ctrl-next {
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.28);
-        transition: color 0.18s, transform 0.18s var(--ease), background 0.18s;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .ctrl-prev:hover,
-      .ctrl-next:hover {
-        color: rgba(255, 255, 255, 0.75);
-        background: rgba(255, 255, 255, 0.05);
-      }
-      .ctrl-prev:active {
-        transform: scale(0.84) translateX(-3px);
-      }
-      .ctrl-next:active {
-        transform: scale(0.84) translateX(3px);
-      }
-      .ctrl-play {
-        width: 68px;
-        height: 68px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.97);
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--c0);
-        margin: 0 8px;
-        transition: all 0.2s var(--spring);
-        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.35),
-          0 1px 4px rgba(0, 0, 0, 0.25);
-        -webkit-tap-highlight-color: transparent;
-        position: relative;
-      }
-      .ctrl-play::before {
-        content: "";
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: all 0.2s;
-      }
-      .ctrl-play:hover {
-        background: var(--white);
-        transform: scale(1.07);
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
-      }
-      .ctrl-play:hover::before {
-        inset: -6px;
-        border-color: rgba(255, 255, 255, 0.12);
-      }
-      .ctrl-play:active {
-        transform: scale(0.94);
-      }
-      #ctrl-play-icon {
-        transition: transform 0.18s var(--ease);
-      }
+/* Topbar volume control */
+.ptb-vol {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 4px;
+}
+.ptb-vol-icon {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.28);
+  transition: color 0.15s;
+  flex-shrink: 0;
+  padding: 0;
+}
+.ptb-vol-icon:hover { color: rgba(255,255,255,0.65); }
+.ptb-vol-rail {
+  width: 72px;
+  height: 2px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 100px;
+  position: relative;
+  cursor: pointer;
+  transition: height 0.15s;
+}
+.ptb-vol-rail:hover { height: 3px; }
+.ptb-vol-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.30);
+  border-radius: 100px;
+  transition: width 0.06s, background 4s;
+  pointer-events: none;
+}
+#s-player.mood-warm  .ptb-vol-fill { background: rgba(242,188,82,0.55); }
+#s-player.mood-cool  .ptb-vol-fill { background: rgba(91,168,232,0.55); }
+#s-player.mood-green .ptb-vol-fill { background: rgba(49,217,154,0.55); }
+#s-player.mood-night .ptb-vol-fill { background: rgba(168,130,232,0.55); }
+.ptb-vol-input {
+  position: absolute;
+  inset: -8px 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+}
+/* Hide slider text on very narrow screens, keep icon */
+@media (max-width: 480px) {
+  .ptb-vol-rail { display: none; }
+}
 
-      .ctrl-shuffle,
-      .ctrl-repeat {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.22);
-        transition: color 0.18s, transform 0.15s var(--ease), background 0.18s;
-        -webkit-tap-highlight-color: transparent;
-        position: relative;
-      }
-      .ctrl-shuffle:hover,
-      .ctrl-repeat:hover {
-        color: rgba(255, 255, 255, 0.65);
-        background: rgba(255, 255, 255, 0.05);
-      }
-      .ctrl-shuffle:active,
-      .ctrl-repeat:active {
-        transform: scale(0.86);
-      }
-      .ctrl-shuffle.on,
-      .ctrl-repeat.on {
-        color: var(--amber);
-      }
-      #s-player.mood-cool .ctrl-shuffle.on,
-      #s-player.mood-cool .ctrl-repeat.on {
-        color: #5ba8e8;
-      }
-      #s-player.mood-green .ctrl-shuffle.on,
-      #s-player.mood-green .ctrl-repeat.on {
-        color: var(--jade);
-      }
-      #s-player.mood-night .ctrl-shuffle.on,
-      #s-player.mood-night .ctrl-repeat.on {
-        color: #a882e8;
-      }
-      /* Active dot indicator under button */
-      .ctrl-shuffle::after,
-      .ctrl-repeat::after {
-        content: "";
-        position: absolute;
-        bottom: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: currentColor;
-        opacity: 0;
-        transition: opacity 0.18s;
-      }
-      .ctrl-shuffle.on::after,
-      .ctrl-repeat.on::after {
-        opacity: 1;
-      }
 
-      /* ── Secondary row: volume + why ── */
-      .player-secondary {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        margin-bottom: 0;
-      }
-      .vol-row {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        color: rgba(255, 255, 255, 0.22);
-      }
-      .vol-icon {
-        flex-shrink: 0;
-      }
-      .vol-rail {
-        width: 88px;
-        height: 1.5px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 100px;
-        cursor: pointer;
-        position: relative;
-        transition: height 0.15s;
-      }
-      .vol-rail:hover {
-        height: 3px;
-      }
-      .vol-fill {
-        height: 100%;
-        background: rgba(255, 255, 255, 0.32);
-        border-radius: 100px;
-        transition: width 0.06s;
-      }
-      .vol-input {
-        position: absolute;
-        inset: -8px 0;
-        opacity: 0;
-        cursor: pointer;
-        width: 100%;
-      }
-      .why-btn {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        font-family: var(--font-sans);
-        font-size: 12px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.28);
-        letter-spacing: 0.02em;
-        transition: color 0.18s;
-        padding: 4px 0;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .why-btn:hover {
-        color: rgba(255, 255, 255, 0.7);
-      }
-      .why-btn.active {
-        color: var(--amber);
-      }
-      #s-player.mood-cool .why-btn.active {
-        color: #5ba8e8;
-      }
-      #s-player.mood-green .why-btn.active {
-        color: var(--jade);
-      }
-      #s-player.mood-night .why-btn.active {
-        color: #a882e8;
-      }
-      .why-dot {
-        width: 4.5px;
-        height: 4.5px;
-        border-radius: 50%;
-        background: currentColor;
-        animation: pulse 2s ease-in-out infinite;
-        flex-shrink: 0;
-      }
+/* ══════════════════════════════════════════
+   PLAYER HERO — cinematic composition
+══════════════════════════════════════════ */
 
-      /* Why panel: borderless, wide, part of the stage */
-      .why-expand {
-        width: 100%;
-        max-width: 420px;
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-        transition: max-height 0.42s var(--ease), opacity 0.32s var(--ease),
-          margin-top 0.32s;
-        margin-top: 0;
-      }
-      .why-expand.open {
-        max-height: 100px;
-        opacity: 1;
-        margin-top: 14px;
-      }
+/* ── Stage ── */
+.player-stage {
+  position: relative;
+  z-index: 20;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 32px 32px;
+  min-height: 0;
+  gap: 0;
+  justify-content: center;
+}
 
-      /* why-btn sits directly under artist name, centered */
-      .track-identity .why-btn {
-        margin-top: 16px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .track-identity .why-expand {
-        margin-left: auto;
-        margin-right: auto;
-        text-align: left;
-      }
-      .why-label-sm {
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.22);
-        margin-bottom: 8px;
-      }
-      .why-body {
-        font-size: 13px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.5);
-        line-height: 1.65;
-        letter-spacing: 0.005em;
-      }
+/* ── Traffic control — mode selector ── */
+.inline-traffic {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 40px;
+  flex-shrink: 0;
+}
+.inline-traffic.visible { display: flex; }
+.inline-traffic-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+.inline-traffic-opts {
+  display: flex;
+  gap: 10px;
+}
+.hero-opt {
+  padding: 11px 32px;
+  border-radius: 100px;
+  border: 0.5px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.05);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.40);
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all 0.20s var(--ease);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-opt:hover {
+  background: rgba(255,255,255,0.09);
+  color: rgba(255,255,255,0.80);
+  border-color: rgba(255,255,255,0.20);
+}
+.hero-opt.on {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.24);
+  color: var(--white);
+}
+#s-player.mood-warm  .hero-opt.on { background: rgba(242,188,82,0.14); border-color: rgba(242,188,82,0.40); color: rgba(242,188,82,0.96); }
+#s-player.mood-cool  .hero-opt.on { background: rgba(91,168,232,0.13); border-color: rgba(91,168,232,0.34); color: rgba(91,168,232,0.96); }
+#s-player.mood-green .hero-opt.on { background: rgba(49,217,154,0.12); border-color: rgba(49,217,154,0.32); color: rgba(49,217,154,0.96); }
+#s-player.mood-night .hero-opt.on { background: rgba(168,130,232,0.13); border-color: rgba(168,130,232,0.34); color: rgba(168,130,232,0.96); }
+.hero-opt:active { transform: scale(0.94); }
 
-      /* ══════════════════════════════════════════
+/* ── Track identity ── */
+.track-identity {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 48px;
+}
+.track-title {
+  font-family: var(--font-serif);
+  font-size: clamp(34px, 5.5vw, 66px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+  color: var(--white);
+  margin-bottom: 12px;
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.track-title.changing { opacity: 0; transform: translateY(8px); }
+.track-artist {
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.42);
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  transition: opacity 0.35s var(--ease);
+}
+.track-artist.changing { opacity: 0; }
+
+/* Mood line now sits below artist */
+.track-mood-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 0;
+}
+.mood-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.24);
+  transition: color 4s var(--slow);
+}
+/* Weather label — lives before mood-tag, hidden when empty */
+.weather-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  transition: opacity 3s var(--slow), color 3s var(--slow);
+}
+.weather-tag:empty { display: none; }
+.weather-tag:not(:empty) + .mood-tag::before {
+  content: '·';
+  margin-right: 8px;
+  color: rgba(255,255,255,0.15);
+}
+/* Weather tints the weather-tag text subtly per condition */
+#s-player.weather-sunny  .weather-tag { color: rgba(242,188,82,0.70); }
+#s-player.weather-cloudy .weather-tag { color: rgba(180,185,200,0.55); }
+#s-player.weather-rain   .weather-tag { color: rgba(100,140,200,0.65); }
+#s-player.weather-night  .weather-tag { color: rgba(160,130,220,0.60); }
+.mood-tag-accent {
+  color: var(--amber);
+  transition: color 4s var(--slow);
+}
+#s-player.mood-cool  .mood-tag-accent { color: #5BA8E8; }
+#s-player.mood-green .mood-tag-accent { color: var(--jade); }
+#s-player.mood-night .mood-tag-accent { color: #A882E8; }
+.mood-tag-sep {
+  width: 2.5px; height: 2.5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+
+/* ── Progress ── */
+.track-progress {
+  width: 100%;
+  max-width: min(480px, 90vw);
+  margin-bottom: 44px;
+  user-select: none;
+}
+.prog-rail {
+  height: 1.5px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  transition: height 0.18s;
+}
+.prog-rail:hover { height: 3px; }
+.prog-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.1s linear, background 4s;
+  position: relative;
+}
+#s-player.mood-warm  .prog-fill { background: rgba(242,188,82,0.85); }
+#s-player.mood-cool  .prog-fill { background: rgba(91,168,232,0.85); }
+#s-player.mood-green .prog-fill { background: rgba(49,217,154,0.85); }
+#s-player.mood-night .prog-fill { background: rgba(168,130,232,0.85); }
+.prog-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px; top: 50%;
+  transform: translateY(-50%);
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--white);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.prog-rail:hover .prog-fill::after { opacity: 1; }
+.prog-times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.20);
+  letter-spacing: 0.03em;
+}
+
+/* ── Controls ── */
+.ctrl-strip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+}
+.ctrl-prev, .ctrl-next {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.28);
+  transition: color 0.18s, transform 0.18s var(--ease), background 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ctrl-prev:hover, .ctrl-next:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.05); }
+.ctrl-prev:active { transform: scale(0.84) translateX(-3px); }
+.ctrl-next:active { transform: scale(0.84) translateX(3px); }
+.ctrl-play {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.97);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c0);
+  margin: 0 10px;
+  transition: all 0.2s var(--spring);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.25);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.ctrl-play::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.2s;
+}
+.ctrl-play:hover {
+  background: var(--white);
+  transform: scale(1.07);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+}
+.ctrl-play:hover::before { inset: -6px; border-color: rgba(255,255,255,0.12); }
+.ctrl-play:active { transform: scale(0.94); }
+#ctrl-play-icon { transition: transform 0.18s var(--ease); }
+
+.ctrl-shuffle, .ctrl-repeat {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.22);
+  transition: color 0.18s, transform 0.15s var(--ease), background 0.18s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.ctrl-shuffle:hover, .ctrl-repeat:hover { color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.05); }
+.ctrl-shuffle:active, .ctrl-repeat:active { transform: scale(0.86); }
+.ctrl-shuffle.on, .ctrl-repeat.on { color: var(--amber); }
+#s-player.mood-cool  .ctrl-shuffle.on, #s-player.mood-cool  .ctrl-repeat.on { color: #5BA8E8; }
+#s-player.mood-green .ctrl-shuffle.on, #s-player.mood-green .ctrl-repeat.on { color: var(--jade); }
+#s-player.mood-night .ctrl-shuffle.on, #s-player.mood-night .ctrl-repeat.on { color: #A882E8; }
+.ctrl-shuffle::after, .ctrl-repeat::after {
+  content: '';
+  position: absolute;
+  bottom: 5px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.ctrl-shuffle.on::after, .ctrl-repeat.on::after { opacity: 1; }
+
+/* ── Volume (topbar) ── */
+.player-secondary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 0;
+}
+.vol-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(255,255,255,0.22);
+}
+.vol-icon { flex-shrink: 0; }
+.vol-rail {
+  width: 88px;
+  height: 1.5px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  transition: height 0.15s;
+}
+.vol-rail:hover { height: 3px; }
+.vol-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.32);
+  border-radius: 100px;
+  transition: width 0.06s;
+}
+.vol-input {
+  position: absolute;
+  inset: -8px 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* ── Why this track ── */
+.why-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.26);
+  letter-spacing: 0.02em;
+  transition: color 0.18s;
+  padding: 4px 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.why-btn:hover { color: rgba(255,255,255,0.65); }
+.why-btn.active { color: var(--amber); }
+#s-player.mood-cool  .why-btn.active { color: #5BA8E8; }
+#s-player.mood-green .why-btn.active { color: var(--jade); }
+#s-player.mood-night .why-btn.active { color: #A882E8; }
+.why-dot {
+  width: 4.5px; height: 4.5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.why-expand {
+  width: 100%;
+  max-width: 460px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.42s var(--ease), opacity 0.32s var(--ease), margin-top 0.32s;
+  margin-top: 0;
+}
+.why-expand.open { max-height: 110px; opacity: 1; margin-top: 16px; }
+.track-identity .why-btn { margin-top: 24px; margin-left: auto; margin-right: auto; }
+.track-identity .why-expand { margin-left: auto; margin-right: auto; text-align: left; }
+.why-label-sm {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.09em;
+  text-transform: uppercase; color: rgba(255,255,255,0.22); margin-bottom: 8px;
+}
+.why-body { font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.50); line-height: 1.65; letter-spacing: 0.005em; }
+
+
+
+/* ══════════════════════════════════════════
    CONTEXT TRAY — refined bottom panel
 ══════════════════════════════════════════ */
-      .context-tray {
-        position: relative;
-        z-index: 20;
-        flex-shrink: 0;
-        padding: 0 36px 28px;
-      }
+.context-tray {
+  position: relative;
+  z-index: 20;
+  flex-shrink: 0;
+  padding: 0 36px 28px;
+}
 
-      /* Handle */
-      .ctx-handle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 12px 0 10px;
-        cursor: pointer;
-      }
-      .ctx-handle-pip {
-        width: 28px;
-        height: 1px;
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 100px;
-        transition: background 0.2s, width 0.2s;
-      }
-      .ctx-handle:hover .ctx-handle-pip {
-        background: rgba(255, 255, 255, 0.28);
-        width: 36px;
-      }
-      .ctx-handle-word {
-        font-size: 10px;
-        font-weight: 400;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.2);
-        transition: color 0.2s;
-      }
-      .ctx-handle:hover .ctx-handle-word {
-        color: rgba(255, 255, 255, 0.45);
-      }
+/* Handle */
+.ctx-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 0 10px;
+  cursor: pointer;
+}
+.ctx-handle-pip {
+  width: 28px; height: 1px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 100px;
+  transition: background 0.2s, width 0.2s;
+}
+.ctx-handle:hover .ctx-handle-pip { background: rgba(255,255,255,0.28); width: 36px; }
+.ctx-handle-word {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.20);
+  transition: color 0.2s;
+}
+.ctx-handle:hover .ctx-handle-word { color: rgba(255,255,255,0.45); }
 
-      /* Expandable rows */
-      .ctx-expand {
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-        transition: max-height 0.5s var(--ease), opacity 0.38s var(--ease);
-      }
-      .ctx-expand.open {
-        max-height: 80px;
-        opacity: 1;
-      }
+/* Expandable rows */
+.ctx-expand {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.50s var(--ease), opacity 0.38s var(--ease);
+}
+.ctx-expand.open {
+  max-height: 80px;
+  opacity: 1;
+}
 
-      .ctx-hairline {
-        height: 0.5px;
-        background: rgba(255, 255, 255, 0.06);
-        margin-bottom: 18px;
-      }
+.ctx-hairline {
+  height: 0.5px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 18px;
+}
 
-      .ctx-group {
-        display: flex;
-        align-items: center;
-        gap: 0;
-        margin-bottom: 4px;
-      }
-      .ctx-group:last-child {
-        margin-bottom: 4px;
-      }
-      .ctx-lbl {
-        font-size: 11px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.25);
-        letter-spacing: 0.04em;
-        width: 80px;
-        flex-shrink: 0;
-      }
-      .ctx-opts {
-        display: flex;
-        gap: 5px;
-        flex-wrap: wrap;
-      }
-      .ctx-opt {
-        padding: 5px 14px;
-        border-radius: 100px;
-        border: none;
-        background: rgba(255, 255, 255, 0.05);
-        font-family: var(--font-sans);
-        font-size: 12px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.32);
-        cursor: pointer;
-        transition: all 0.15s var(--ease);
-        user-select: none;
-        white-space: nowrap;
-        letter-spacing: 0.01em;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .ctx-opt:hover {
-        background: rgba(255, 255, 255, 0.09);
-        color: rgba(255, 255, 255, 0.72);
-      }
-      .ctx-opt.on {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--white);
-      }
-      /* mood-tinted active opts */
-      #s-player.mood-warm .ctx-opt.on {
-        background: rgba(242, 188, 82, 0.14);
-        color: rgba(242, 188, 82, 0.9);
-      }
-      #s-player.mood-cool .ctx-opt.on {
-        background: rgba(91, 168, 232, 0.13);
-        color: rgba(91, 168, 232, 0.9);
-      }
-      #s-player.mood-green .ctx-opt.on {
-        background: rgba(49, 217, 154, 0.12);
-        color: rgba(49, 217, 154, 0.9);
-      }
-      #s-player.mood-night .ctx-opt.on {
-        background: rgba(168, 130, 232, 0.13);
-        color: rgba(168, 130, 232, 0.9);
-      }
+.ctx-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 4px;
+}
+.ctx-group:last-child { margin-bottom: 4px; }
+.ctx-lbl {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.04em;
+  width: 80px;
+  flex-shrink: 0;
+}
+.ctx-opts { display: flex; gap: 5px; flex-wrap: wrap; }
+.ctx-opt {
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: none;
+  background: rgba(255,255,255,0.05);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.32);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  user-select: none;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+}
+.ctx-opt:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.72); }
+.ctx-opt.on {
+  background: rgba(255,255,255,0.10);
+  color: var(--white);
+}
+/* mood-tinted active opts */
+#s-player.mood-warm  .ctx-opt.on { background: rgba(242,188,82,0.14); color: rgba(242,188,82,0.90); }
+#s-player.mood-cool  .ctx-opt.on { background: rgba(91,168,232,0.13); color: rgba(91,168,232,0.90); }
+#s-player.mood-green .ctx-opt.on { background: rgba(49,217,154,0.12); color: rgba(49,217,154,0.90); }
+#s-player.mood-night .ctx-opt.on { background: rgba(168,130,232,0.13); color: rgba(168,130,232,0.90); }
 
-      /* Peek summary (when tray is closed) */
-      .ctx-peek {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-        transition: opacity 0.3s;
-        padding: 0 0 2px;
-      }
-      .ctx-expand.open + .ctx-peek {
-        display: none;
-      }
-      .pk-val {
-        font-size: 11px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.25);
-        letter-spacing: 0.02em;
-        white-space: nowrap;
-        transition: color 4s;
-      }
-      .pk-sep {
-        width: 2.5px;
-        height: 2.5px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.12);
-        flex-shrink: 0;
-      }
+/* Peek summary (when tray is closed) */
+.ctx-peek {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: opacity 0.3s;
+  padding: 0 0 2px;
+}
+.ctx-expand.open + .ctx-peek { display: none; }
+.pk-val {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: color 4s;
+}
+.pk-sep {
+  width: 2.5px; height: 2.5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
 
-      /* ══════════════════════════════════════════
+/* ══════════════════════════════════════════
    HEIGHT-RESPONSIVE ADJUSTMENTS
    Tighten spacing on laptop / short displays
    so everything fits without needing to scroll
    on most common screen sizes (900px–680px tall)
 ══════════════════════════════════════════ */
-      /* Context tray hidden when hero traffic control is active */
-      .context-tray.hidden {
-        display: none;
-      }
+/* Context tray hidden when hero traffic control is active */
+.context-tray.hidden { display: none; }
 
-      @media (max-height: 900px) {
-        .player-topbar {
-          padding-top: 20px;
-        }
-        .orb-system {
-          margin-bottom: 32px;
-        }
-        .track-identity {
-          margin-bottom: 32px;
-        }
-        .track-progress {
-          margin-bottom: 28px;
-        }
-        .ctrl-strip {
-          margin-bottom: 22px;
-        }
-      }
+@media (max-height: 900px) {
+  .player-topbar { padding-top: 20px; }
+  .inline-traffic { margin-bottom: 28px; }
+  .track-identity { margin-bottom: 36px; }
+  .track-progress { margin-bottom: 32px; }
+  .ctrl-strip { margin-bottom: 20px; }
+}
 
-      @media (max-height: 780px) {
-        .player-topbar {
-          padding-top: 16px;
-        }
-        .orb-system {
-          margin-bottom: 24px;
-        }
-        .track-identity {
-          margin-bottom: 22px;
-        }
-        .track-mood-line {
-          margin-bottom: 10px;
-        }
-        .track-progress {
-          margin-bottom: 20px;
-        }
-        .ctrl-strip {
-          margin-bottom: 16px;
-        }
-        .ctrl-play {
-          width: 60px;
-          height: 60px;
-        }
-        .ctrl-prev,
-        .ctrl-next {
-          width: 44px;
-          height: 44px;
-        }
-        .context-tray {
-          padding-bottom: 20px;
-        }
-      }
+@media (max-height: 780px) {
+  .player-topbar { padding-top: 16px; }
+  .inline-traffic { margin-bottom: 20px; gap: 12px; }
+  .track-identity { margin-bottom: 24px; }
+  .track-mood-line { margin-bottom: 0; }
+  .track-progress { margin-bottom: 22px; }
+  .ctrl-strip { margin-bottom: 14px; }
+  .ctrl-play { width: 62px; height: 62px; }
+  .ctrl-prev, .ctrl-next { width: 44px; height: 44px; }
+  .context-tray { padding-bottom: 16px; }
+}
 
-      @media (max-height: 660px) {
-        .player-topbar {
-          padding-top: 12px;
-        }
-        .orb-system {
-          width: min(180px, 28vw, 24vh);
-          height: min(180px, 28vw, 24vh);
-          margin-bottom: 18px;
-        }
-        .track-title {
-          font-size: clamp(22px, 4vw, 40px);
-        }
-        .track-identity {
-          margin-bottom: 16px;
-        }
-        .track-progress {
-          margin-bottom: 16px;
-        }
-        .ctrl-strip {
-          margin-bottom: 12px;
-        }
-        .ctrl-play {
-          width: 54px;
-          height: 54px;
-        }
-        .player-stage {
-          justify-content: flex-start;
-          padding-top: 20px;
-        }
-      }
+@media (max-height: 660px) {
+  .player-topbar { padding-top: 10px; }
+  .inline-traffic { margin-bottom: 14px; gap: 10px; }
+  .hero-opt { padding: 8px 22px; font-size: 12px; }
+  .track-title { font-size: clamp(26px, 4.5vw, 48px); }
+  .track-identity { margin-bottom: 16px; }
+  .track-progress { margin-bottom: 14px; }
+  .ctrl-strip { margin-bottom: 10px; }
+  .ctrl-play { width: 56px; height: 56px; }
+  .player-stage { justify-content: flex-start; padding-top: 12px; }
+}
 
-      /* ══════════════════════════
+/* ══════════════════════════
    QUEUE DRAWER
 ══════════════════════════ */
-      .queue-drawer {
-        position: fixed;
-        inset: 0;
-        z-index: 200;
-        display: flex;
-        flex-direction: row;
-        align-items: stretch;
-        justify-content: flex-end;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.28s var(--ease);
-      }
-      .queue-drawer.open {
-        opacity: 1;
-        pointer-events: all;
-      }
-      .queue-backdrop {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        cursor: default;
-      }
-      .queue-panel {
-        position: relative;
-        z-index: 1;
-        flex: 0 0 min(340px, 85vw);
-        width: min(340px, 85vw);
-        height: 100%;
-        background: rgba(18, 14, 10, 0.6);
-        backdrop-filter: blur(48px) saturate(200%) brightness(0.75);
-        -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(0.75);
-        border-left: 0.5px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column;
-        transform: translateX(100%);
-        transition: transform 0.38s var(--ease);
-        overflow: hidden;
-      }
-      .queue-drawer.open .queue-panel {
-        transform: translateX(0);
-      }
-      .queue-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 28px 24px 20px;
-        border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
-        flex-shrink: 0;
-      }
-      .queue-title {
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--white);
-        letter-spacing: -0.01em;
-      }
-      .queue-close {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.35);
-        transition: all 0.12s;
-      }
-      .queue-close:hover {
-        background: rgba(255, 255, 255, 0.07);
-        color: var(--white);
-      }
-      .queue-list {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px 0;
-      }
-      .queue-track {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 12px 24px;
-        cursor: pointer;
-        transition: background 0.12s;
-        position: relative;
-      }
-      .queue-track:hover {
-        background: rgba(255, 255, 255, 0.04);
-      }
-      .queue-track.active {
-        background: rgba(255, 255, 255, 0.03);
-      }
-      .queue-track-num {
-        font-size: 12px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.2);
-        width: 16px;
-        text-align: right;
-        flex-shrink: 0;
-      }
-      .queue-track.active .queue-track-num {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-      }
-      .queue-track-playing {
-        display: flex;
-        align-items: flex-end;
-        gap: 2px;
-        height: 12px;
-      }
-      .qtb {
-        width: 2px;
-        border-radius: 1px;
-        background: var(--amber);
-        animation: obAnim 1.2s ease-in-out infinite;
-      }
-      .qtb:nth-child(1) {
-        height: 5px;
-        animation-delay: 0s;
-      }
-      .qtb:nth-child(2) {
-        height: 9px;
-        animation-delay: 0.15s;
-      }
-      .qtb:nth-child(3) {
-        height: 6px;
-        animation-delay: 0.08s;
-      }
-      .qtb.paused {
-        animation-play-state: paused;
-      }
-      #s-player.mood-cool .qtb {
-        background: #5ba8e8;
-      }
-      #s-player.mood-green .qtb {
-        background: var(--jade);
-      }
-      #s-player.mood-night .qtb {
-        background: #a882e8;
-      }
-      .queue-track-info {
-        flex: 1;
-        min-width: 0;
-      }
-      .queue-track-name {
-        font-size: 13px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.7);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 2px;
-        transition: color 0.12s;
-      }
-      .queue-track.active .queue-track-name {
-        color: var(--white);
-      }
-      .queue-track-meta {
-        font-size: 11px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.28);
-      }
-      .queue-track-mood {
-        font-size: 11px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.18);
-        flex-shrink: 0;
-        white-space: nowrap;
-      }
-      .queue-track.active .queue-track-mood {
-        color: var(--amber);
-      }
-      #s-player.mood-cool .queue-track.active .queue-track-mood {
-        color: #5ba8e8;
-      }
-      #s-player.mood-green .queue-track.active .queue-track-mood {
-        color: var(--jade);
-      }
-      #s-player.mood-night .queue-track.active .queue-track-mood {
-        color: #a882e8;
-      }
+.queue-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-end;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.28s var(--ease);
+}
+.queue-drawer.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.queue-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  cursor: default;
+}
+.queue-panel {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 min(340px, 85vw);
+  width: min(340px, 85vw);
+  height: 100%;
+  background: rgba(18, 14, 10, 0.60);
+  backdrop-filter: blur(48px) saturate(200%) brightness(0.75);
+  -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(0.75);
+  border-left: 0.5px solid rgba(255,255,255,0.10);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.38s var(--ease);
+  overflow: hidden;
+}
+.queue-drawer.open .queue-panel {
+  transform: translateX(0);
+}
+.queue-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 24px 20px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.queue-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.queue-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.35);
+  transition: all 0.12s;
+}
+.queue-close:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.queue-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+.queue-track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+}
+.queue-track:hover { background: rgba(255,255,255,0.04); }
+.queue-track.active { background: rgba(255,255,255,0.03); }
+.queue-track-num {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.20);
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.queue-track.active .queue-track-num {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.queue-track-playing {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+.qtb {
+  width: 2px;
+  border-radius: 1px;
+  background: var(--amber);
+  animation: obAnim 1.2s ease-in-out infinite;
+}
+.qtb:nth-child(1) { height:5px; animation-delay:0s; }
+.qtb:nth-child(2) { height:9px; animation-delay:0.15s; }
+.qtb:nth-child(3) { height:6px; animation-delay:0.08s; }
+.qtb.paused { animation-play-state: paused; }
+#s-player.mood-cool  .qtb { background: #5BA8E8; }
+#s-player.mood-green .qtb { background: var(--jade); }
+#s-player.mood-night .qtb { background: #A882E8; }
+.queue-track-info { flex: 1; min-width: 0; }
+.queue-track-name {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+  transition: color 0.12s;
+}
+.queue-track.active .queue-track-name { color: var(--white); }
+.queue-track-meta {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.28);
+}
+.queue-track-mood {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.18);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.queue-track.active .queue-track-mood { color: var(--amber); }
+#s-player.mood-cool  .queue-track.active .queue-track-mood { color: #5BA8E8; }
+#s-player.mood-green .queue-track.active .queue-track-mood { color: var(--jade); }
+#s-player.mood-night .queue-track.active .queue-track-mood { color: #A882E8; }
 
-      /* ══════════════════════════
+/* ══════════════════════════
    SETTINGS
 ══════════════════════════ */
-      #s-settings {
-        flex-direction: column;
-        overflow-y: auto;
-        background: var(--c0);
-      }
+#s-settings {
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--c0);
+}
 
-      .settings-topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 24px 32px;
-        border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
-        position: sticky;
-        top: 0;
-        background: var(--c0);
-        z-index: 50;
-        flex-shrink: 0;
-      }
-      .settings-back {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        color: var(--c7);
-        cursor: pointer;
-        transition: color 0.12s;
-      }
-      .settings-back:hover {
-        color: var(--white);
-      }
-      .settings-title {
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--white);
-        letter-spacing: -0.01em;
-      }
+.settings-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 0;
+  background: var(--c0);
+  z-index: 50;
+  flex-shrink: 0;
+}
+.settings-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--c7);
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.settings-back:hover { color: var(--white); }
+.settings-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
 
-      .settings-body {
-        max-width: 560px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 40px 32px 80px;
-      }
+.settings-body {
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
 
-      .sg-title {
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
-        color: var(--c5);
-        margin-bottom: 12px;
-        padding-left: 4px;
-      }
-      .sg-block {
-        border: 0.5px solid rgba(255, 255, 255, 0.07);
-        border-radius: 18px;
-        overflow: hidden;
-        background: var(--c1);
-        margin-bottom: 32px;
-      }
-      .sg-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 16px 20px;
-        border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
-        transition: background 0.12s;
-      }
-      .sg-row:last-child {
-        border-bottom: none;
-      }
-      .sg-row:hover {
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .sg-row-left {
-      }
-      .sg-row-name {
-        font-size: 14px;
-        font-weight: 400;
-        color: var(--white);
-        margin-bottom: 2px;
-        letter-spacing: -0.01em;
-      }
-      .sg-row-desc {
-        font-size: 12px;
-        font-weight: 300;
-        color: var(--c6);
-        line-height: 1.5;
-      }
-      .sg-row-right {
-        flex-shrink: 0;
-      }
-      .sg-value {
-        font-size: 13px;
-        color: var(--c7);
-      }
-      .sg-link {
-        font-size: 13px;
-        color: var(--amber);
-        cursor: pointer;
-        transition: opacity 0.12s;
-      }
-      .sg-link:hover {
-        opacity: 0.75;
-      }
+.sg-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--c5);
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+.sg-block {
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--c1);
+  margin-bottom: 32px;
+}
+.sg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+  transition: background 0.12s;
+}
+.sg-row:last-child { border-bottom: none; }
+.sg-row:hover { background: rgba(255,255,255,0.02); }
+.sg-row-left {}
+.sg-row-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
+}
+.sg-row-desc {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--c6);
+  line-height: 1.5;
+}
+.sg-row-right { flex-shrink: 0; }
+.sg-value {
+  font-size: 13px;
+  color: var(--c7);
+}
+.sg-link {
+  font-size: 13px;
+  color: var(--amber);
+  cursor: pointer;
+  transition: opacity 0.12s;
+}
+.sg-link:hover { opacity: 0.75; }
 
-      /* Toggle */
-      .tg {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 26px;
-        cursor: pointer;
-        flex-shrink: 0;
-      }
-      .tg input {
-        position: absolute;
-        opacity: 0;
-        width: 0;
-        height: 0;
-        margin: 0;
-      }
-      .tg-track {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--c4);
-        border-radius: 100px;
-        border: 0.5px solid rgba(255, 255, 255, 0.1);
-        transition: background 0.22s var(--ease), border-color 0.22s var(--ease);
-      }
-      .tg input:checked + .tg-track {
-        background: var(--amber);
-        border-color: var(--amber);
-        box-shadow: 0 0 10px rgba(242, 188, 82, 0.2);
-      }
-      .tg-thumb {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: 18px;
-        height: 18px;
-        background: #ffffff;
-        border-radius: 50%;
-        transition: transform 0.22s var(--spring);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
-        pointer-events: none;
-        z-index: 1;
-      }
-      .tg input:checked + .tg-track + .tg-thumb {
-        transform: translateX(18px);
-      }
+/* Toggle */
+.tg {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 26px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.tg input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+.tg-track {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--c4);
+  border-radius: 100px;
+  border: 0.5px solid rgba(255,255,255,0.10);
+  transition: background 0.22s var(--ease), border-color 0.22s var(--ease);
+}
+.tg input:checked + .tg-track {
+  background: var(--amber);
+  border-color: var(--amber);
+  box-shadow: 0 0 10px rgba(242,188,82,0.20);
+}
+.tg-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.22s var(--spring);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.45);
+  pointer-events: none;
+  z-index: 1;
+}
+.tg input:checked + .tg-track + .tg-thumb {
+  transform: translateX(18px);
+}
 
-      /* Danger */
-      .sg-danger {
-        border-color: rgba(240, 104, 128, 0.15);
-        background: rgba(240, 104, 128, 0.04);
-        margin-bottom: 0;
-      }
-      .sg-danger .sg-row-name {
-        color: var(--rose);
-      }
+/* Danger */
+.sg-danger { border-color: rgba(240,104,128,0.15); background: rgba(240,104,128,0.04); margin-bottom: 0; }
+.sg-danger .sg-row-name { color: var(--rose); }
 
-      /* Brand selector in settings */
-      .sg-brand-row {
-        display: flex;
-        gap: 6px;
-      }
-      .sg-brand-opt {
-        flex: 1;
-        padding: 8px 6px;
-        text-align: center;
-        border: 0.5px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        font-size: 12px;
-        color: var(--c6);
-        background: var(--c2);
-        cursor: pointer;
-        transition: all 0.12s;
-        user-select: none;
-      }
-      .sg-brand-opt:hover {
-        color: var(--c8);
-      }
-      .sg-brand-opt.on {
-        background: var(--c2);
-        border-color: rgba(242, 188, 82, 0.45);
-        color: var(--amber);
-      }
+/* Brand selector in settings */
+.sg-brand-row {
+  display: flex;
+  gap: 6px;
+}
+.sg-brand-opt {
+  flex: 1;
+  padding: 8px 6px;
+  text-align: center;
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--c6);
+  background: var(--c2);
+  cursor: pointer;
+  transition: all 0.12s;
+  user-select: none;
+}
+.sg-brand-opt:hover { color: var(--c8); }
+.sg-brand-opt.on { background: var(--c2); border-color: rgba(242,188,82,0.45); color: var(--amber); }
 
-      /* Modal */
-      .modal-bg {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.72);
-        z-index: 200;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding: 0 0 20px;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.25s var(--ease);
-      }
-      .modal-bg.open {
-        opacity: 1;
-        pointer-events: all;
-      }
-      .modal-sheet {
-        background: var(--c2);
-        border: 0.5px solid rgba(255, 255, 255, 0.09);
-        border-radius: 20px 20px 16px 16px;
-        padding: 28px 28px 24px;
-        max-width: 440px;
-        width: calc(100% - 32px);
-        transform: translateY(30px);
-        transition: transform 0.3s var(--ease);
-      }
-      .modal-bg.open .modal-sheet {
-        transform: translateY(0);
-      }
-      .modal-title {
-        font-size: 17px;
-        font-weight: 500;
-        color: var(--white);
-        margin-bottom: 8px;
-        letter-spacing: -0.01em;
-      }
-      .modal-body {
-        font-size: 14px;
-        font-weight: 300;
-        color: var(--c7);
-        line-height: 1.65;
-        margin-bottom: 24px;
-      }
-      .modal-btns {
-        display: flex;
-        gap: 10px;
-      }
-      .modal-btn {
-        flex: 1;
-        padding: 13px;
-        border-radius: 12px;
-        border: none;
-        font-family: var(--font-sans);
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.14s;
-      }
-      .modal-btn-cancel {
-        background: var(--c3);
-        color: var(--white);
-      }
-      .modal-btn-cancel:hover {
-        background: var(--c4);
-      }
-      .modal-btn-confirm {
-        background: rgba(240, 104, 128, 0.15);
-        color: var(--rose);
-        border: 0.5px solid rgba(240, 104, 128, 0.25);
-      }
-      .modal-btn-confirm:hover {
-        background: rgba(240, 104, 128, 0.25);
-      }
+/* Modal */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease);
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal-sheet {
+  background: var(--c2);
+  border: 0.5px solid rgba(255,255,255,0.09);
+  border-radius: 20px 20px 16px 16px;
+  padding: 28px 28px 24px;
+  max-width: 440px;
+  width: calc(100% - 32px);
+  transform: translateY(30px);
+  transition: transform 0.3s var(--ease);
+}
+.modal-bg.open .modal-sheet { transform: translateY(0); }
+.modal-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.modal-body {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--c7);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+.modal-btns { display: flex; gap: 10px; }
+.modal-btn {
+  flex: 1;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.14s;
+}
+.modal-btn-cancel { background: var(--c3); color: var(--white); }
+.modal-btn-cancel:hover { background: var(--c4); }
+.modal-btn-confirm { background: rgba(240,104,128,0.15); color: var(--rose); border: 0.5px solid rgba(240,104,128,0.25); }
+.modal-btn-confirm:hover { background: rgba(240,104,128,0.25); }
 
-      /* Toast */
-      .toast {
-        position: fixed;
-        bottom: 28px;
-        left: 50%;
-        transform: translateX(-50%) translateY(20px);
-        background: var(--c3);
-        border: 0.5px solid rgba(255, 255, 255, 0.1);
-        border-radius: 100px;
-        padding: 10px 20px;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--c9);
-        white-space: nowrap;
-        opacity: 0;
-        transition: all 0.3s var(--ease);
-        z-index: 500;
-        pointer-events: none;
-      }
-      .toast.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-    </style>
-  </head>
-  <body>
-    <!-- TOAST -->
-    <div id="toast" class="toast"></div>
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--c3);
+  border: 0.5px solid rgba(255,255,255,0.10);
+  border-radius: 100px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--c9);
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s var(--ease);
+  z-index: 500;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
 
-    <!-- MODAL -->
-    <div id="modal" class="modal-bg">
-      <div class="modal-sheet">
-        <div class="modal-title">Delete this venue?</div>
-        <div class="modal-body">
-          This removes the venue and all its history. Music will stop
-          immediately. This cannot be undone.
-        </div>
-        <div class="modal-btns">
-          <button class="modal-btn modal-btn-cancel" onclick="closeModal()">
-            Keep venue
-          </button>
-          <button class="modal-btn modal-btn-confirm" onclick="doDelete()">
-            Delete venue
-          </button>
-        </div>
-      </div>
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-bg">
+  <div class="modal-sheet">
+    <div class="modal-title">Delete this venue?</div>
+    <div class="modal-body">This removes the venue and all its history. Music will stop immediately. This cannot be undone.</div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Keep venue</button>
+      <button class="modal-btn modal-btn-confirm" onclick="doDelete()">Delete venue</button>
     </div>
+  </div>
+</div>
 
-    <!-- ════════════════════════════
+<!-- ════════════════════════════
      SCREEN: LOGIN
 ════════════════════════════ -->
-    <div id="s-login" class="scr active">
-      <div class="login-orb"></div>
-      <div class="login-inner">
-        <div class="login-mark">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 3C12 3 7 7.5 7 13a5 5 0 0010 0C17 7.5 12 3 12 3z"
-              fill="currentColor"
-              opacity="0.9"
-            />
-            <path
-              d="M12 8c0 0-3 2.5-3 5a3 3 0 006 0C15 10.5 12 8 12 8z"
-              fill="currentColor"
-              opacity="0.4"
-            />
-          </svg>
-        </div>
-        <h1 class="login-headline">
-          Music for your<br />space, <em>handled.</em>
-        </h1>
-        <p class="login-sub">The right background music, automatically.</p>
-        <button class="login-btn" id="login-btn" onclick="doLogin()">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path
-              d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.659 14.02 17.64 11.712 17.64 9.2z"
-              fill="#4285F4"
-            />
-            <path
-              d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
-              fill="#34A853"
-            />
-            <path
-              d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
-              fill="#EA4335"
-            />
-          </svg>
-          Continue with Google
-        </button>
-        <p class="login-legal">
-          No account needed. By continuing you agree to our
-          <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
-        </p>
-      </div>
+<div id="s-login" class="scr active">
+  <div class="login-orb"></div>
+  <div class="login-inner">
+    <div class="login-mark">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3C12 3 7 7.5 7 13a5 5 0 0010 0C17 7.5 12 3 12 3z" fill="currentColor" opacity="0.9"/>
+        <path d="M12 8c0 0-3 2.5-3 5a3 3 0 006 0C15 10.5 12 8 12 8z" fill="currentColor" opacity="0.4"/>
+      </svg>
     </div>
+    <h1 class="login-headline">Music for your<br>space, <em>handled.</em></h1>
+    <p class="login-sub">The right background music, automatically.</p>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.659 14.02 17.64 11.712 17.64 9.2z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+        <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+    <p class="login-legal">No account needed. By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+  </div>
+</div>
 
-    <!-- ════════════════════════════
+<!-- ════════════════════════════
      SCREEN: ONBOARD
 ════════════════════════════ -->
-    <div id="s-onboard" class="scr">
-      <!-- Step 1 -->
-      <div id="ob-1" class="ob-wrap">
-        <div class="ob-step-indicator">
-          <div class="ob-step-dot on"></div>
-          <div class="ob-step-dot"></div>
+<div id="s-onboard" class="scr">
+  <!-- Step 1 -->
+  <div id="ob-1" class="ob-wrap">
+    <div class="ob-step-indicator">
+      <div class="ob-step-dot on"></div>
+      <div class="ob-step-dot"></div>
+    </div>
+    <h2 class="ob-question">What kind of<br>venue do you run?</h2>
+    <p class="ob-hint">This shapes the style of music we select.</p>
+    <div class="ob-venue-grid" id="ob-venue-grid">
+      <div class="ob-venue-tile" data-v="cafe" onclick="selectObVenue(this)">
+        <div class="ob-venue-tile-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="4" y="4" width="14" height="11" rx="2.5" stroke="currentColor" stroke-width="1.3" fill="none"/><path d="M18 8h1.5a1.5 1.5 0 010 3H18" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M8 18h6M11 15v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </div>
-        <h2 class="ob-question">What kind of<br />venue do you run?</h2>
-        <p class="ob-hint">This shapes the style of music we select.</p>
-        <div class="ob-venue-grid" id="ob-venue-grid">
-          <div
-            class="ob-venue-tile"
-            data-v="cafe"
-            onclick="selectObVenue(this)"
-          >
-            <div class="ob-venue-tile-icon">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect
-                  x="4"
-                  y="4"
-                  width="14"
-                  height="11"
-                  rx="2.5"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  fill="none"
-                />
-                <path
-                  d="M18 8h1.5a1.5 1.5 0 010 3H18"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M8 18h6M11 15v3"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </div>
-            <div class="ob-venue-tile-label">Café</div>
-          </div>
-          <div
-            class="ob-venue-tile on"
-            data-v="restaurant"
-            onclick="selectObVenue(this)"
-          >
-            <div class="ob-venue-tile-icon">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <path
-                  d="M8 3v6a3 3 0 006 0V3M11 9v10"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M4 3v16"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </div>
-            <div class="ob-venue-tile-label">Restaurant</div>
-          </div>
-          <div
-            class="ob-venue-tile"
-            data-v="hotel"
-            onclick="selectObVenue(this)"
-          >
-            <div class="ob-venue-tile-icon">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect
-                  x="3"
-                  y="8"
-                  width="16"
-                  height="11"
-                  rx="1.5"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  fill="none"
-                />
-                <path
-                  d="M3 8l8-5 8 5"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linejoin="round"
-                  fill="none"
-                />
-                <rect
-                  x="9"
-                  y="13"
-                  width="4"
-                  height="6"
-                  rx="1"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  fill="none"
-                />
-              </svg>
-            </div>
-            <div class="ob-venue-tile-label">Hotel</div>
-          </div>
-          <div class="ob-venue-tile" data-v="gym" onclick="selectObVenue(this)">
-            <div class="ob-venue-tile-icon">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <path
-                  d="M3 11h2m12 0h2m-3.5-5h1.5a1 1 0 011 1v8a1 1 0 01-1 1h-1.5M6.5 6H5a1 1 0 00-1 1v8a1 1 0 001 1h1.5"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                />
-                <rect
-                  x="6.5"
-                  y="8.5"
-                  width="9"
-                  height="5"
-                  rx="1"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  fill="none"
-                />
-              </svg>
-            </div>
-            <div class="ob-venue-tile-label">Gym</div>
-          </div>
-          <div
-            class="ob-venue-tile"
-            data-v="retail"
-            onclick="selectObVenue(this)"
-          >
-            <div class="ob-venue-tile-icon">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <path
-                  d="M2 3h2l2 10h10l2-7H6"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  fill="none"
-                />
-                <circle
-                  cx="9"
-                  cy="18"
-                  r="1.5"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                />
-                <circle
-                  cx="15"
-                  cy="18"
-                  r="1.5"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                />
-              </svg>
-            </div>
-            <div class="ob-venue-tile-label">Retail</div>
-          </div>
-          <div class="ob-venue-tile" data-v="spa" onclick="selectObVenue(this)">
-            <div class="ob-venue-tile-icon">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <path
-                  d="M11 4c0 4-5 5-5 9a5 5 0 0010 0c0-4-5-5-5-9z"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  fill="none"
-                />
-              </svg>
-            </div>
-            <div class="ob-venue-tile-label">Spa</div>
-          </div>
-        </div>
-        <button class="ob-cta" onclick="obNext()">Continue</button>
-        <span class="ob-back" onclick="goTo('login')">Back to login</span>
+        <div class="ob-venue-tile-label">Café</div>
       </div>
-
-      <!-- Step 2 -->
-      <div id="ob-2" class="ob-wrap" style="display: none">
-        <div class="ob-step-indicator">
-          <div class="ob-step-dot on"></div>
-          <div class="ob-step-dot on"></div>
+      <div class="ob-venue-tile on" data-v="restaurant" onclick="selectObVenue(this)">
+        <div class="ob-venue-tile-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M8 3v6a3 3 0 006 0V3M11 9v10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M4 3v16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </div>
-        <h2 class="ob-question">A few final<br />details.</h2>
-        <p class="ob-hint">You can change these any time in Settings.</p>
-        <input
-          id="ob-name"
-          class="ob-input"
-          type="text"
-          placeholder="Venue name  — e.g. Le Jardin"
-          value="Le Jardin Café"
-        />
-        <div
-          style="
-            margin-bottom: 12px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-            color: var(--c5);
-          "
-        >
-          Brand level
+        <div class="ob-venue-tile-label">Restaurant</div>
+      </div>
+      <div class="ob-venue-tile" data-v="hotel" onclick="selectObVenue(this)">
+        <div class="ob-venue-tile-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="8" width="16" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3" fill="none"/><path d="M3 8l8-5 8 5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/><rect x="9" y="13" width="4" height="6" rx="1" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
         </div>
-        <div class="ob-brand-row" id="ob-brand-row">
-          <div class="ob-brand-opt" onclick="selectObBrand(this)">
-            <div class="ob-brand-opt-name">Budget</div>
-            <div class="ob-brand-opt-desc">High energy</div>
-          </div>
-          <div class="ob-brand-opt on" onclick="selectObBrand(this)">
-            <div class="ob-brand-opt-name">Mid-range</div>
-            <div class="ob-brand-opt-desc">Balanced</div>
-          </div>
-          <div class="ob-brand-opt" onclick="selectObBrand(this)">
-            <div class="ob-brand-opt-name">Luxury</div>
-            <div class="ob-brand-opt-desc">Refined</div>
-          </div>
+        <div class="ob-venue-tile-label">Hotel</div>
+      </div>
+      <div class="ob-venue-tile" data-v="gym" onclick="selectObVenue(this)">
+        <div class="ob-venue-tile-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 11h2m12 0h2m-3.5-5h1.5a1 1 0 011 1v8a1 1 0 01-1 1h-1.5M6.5 6H5a1 1 0 00-1 1v8a1 1 0 001 1h1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="6.5" y="8.5" width="9" height="5" rx="1" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
         </div>
-        <div style="margin-top: 36px">
-          <button class="ob-cta" onclick="obFinish()">
-            Start playing music
-          </button>
-          <span class="ob-back" onclick="obBack()">Back</span>
+        <div class="ob-venue-tile-label">Gym</div>
+      </div>
+      <div class="ob-venue-tile" data-v="retail" onclick="selectObVenue(this)">
+        <div class="ob-venue-tile-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 3h2l2 10h10l2-7H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="9" cy="18" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="15" cy="18" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
         </div>
+        <div class="ob-venue-tile-label">Retail</div>
+      </div>
+      <div class="ob-venue-tile" data-v="spa" onclick="selectObVenue(this)">
+        <div class="ob-venue-tile-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 4c0 4-5 5-5 9a5 5 0 0010 0c0-4-5-5-5-9z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </div>
+        <div class="ob-venue-tile-label">Spa</div>
       </div>
     </div>
+    <button class="ob-cta" onclick="obNext()">Continue</button>
+    <span class="ob-back" onclick="goTo('login')">Back to login</span>
+  </div>
 
-    <!-- ════════════════════════════
+  <!-- Step 2 -->
+  <div id="ob-2" class="ob-wrap" style="display:none">
+    <div class="ob-step-indicator">
+      <div class="ob-step-dot on"></div>
+      <div class="ob-step-dot on"></div>
+    </div>
+    <h2 class="ob-question">A few final<br>details.</h2>
+    <p class="ob-hint">You can change these any time in Settings.</p>
+    <input id="ob-name" class="ob-input" type="text" placeholder="Venue name  — e.g. Le Jardin" value="Le Jardin Café">
+    <div style="margin-bottom:12px;font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--c5)">Brand level</div>
+    <div class="ob-brand-row" id="ob-brand-row">
+      <div class="ob-brand-opt" onclick="selectObBrand(this)">
+        <div class="ob-brand-opt-name">Budget</div>
+        <div class="ob-brand-opt-desc">High energy</div>
+      </div>
+      <div class="ob-brand-opt on" onclick="selectObBrand(this)">
+        <div class="ob-brand-opt-name">Mid-range</div>
+        <div class="ob-brand-opt-desc">Balanced</div>
+      </div>
+      <div class="ob-brand-opt" onclick="selectObBrand(this)">
+        <div class="ob-brand-opt-name">Luxury</div>
+        <div class="ob-brand-opt-desc">Refined</div>
+      </div>
+    </div>
+    <div style="margin-top:36px">
+      <button class="ob-cta" onclick="obFinish()">Start playing music</button>
+      <span class="ob-back" onclick="obBack()">Back</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
      SCREEN: PLAYER — hero
 ════════════════════════════ -->
-    <div id="s-player" class="scr mood-warm">
-      <!-- Queue drawer overlay -->
-      <div id="queue-drawer" class="queue-drawer">
-        <div class="queue-backdrop" onclick="closeQueue()"></div>
-        <div class="queue-panel">
-          <div class="queue-header">
-            <span class="queue-title">Up next</span>
-            <button class="queue-close" onclick="closeQueue()">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M3 3l10 10M13 3L3 13"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </button>
-          </div>
-          <div class="queue-list" id="queue-list"></div>
-        </div>
+<div id="s-player" class="scr mood-warm">
+
+  <!-- Queue drawer overlay -->
+  <div id="queue-drawer" class="queue-drawer">
+    <div class="queue-backdrop" onclick="closeQueue()"></div>
+    <div class="queue-panel">
+      <div class="queue-header">
+        <span class="queue-title">Up next</span>
+        <button class="queue-close" onclick="closeQueue()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
-
-      <!-- Fixed full-screen background layers -->
-      <div class="player-canvas" id="player-canvas">
-        <div class="canvas-blob blob-a"></div>
-        <div class="canvas-blob blob-b"></div>
-        <div class="canvas-blob blob-c"></div>
-      </div>
-      <div class="player-vignette"></div>
-
-      <!-- Scrollable content column -->
-      <div class="player-scroll">
-        <!-- Top bar -->
-        <div class="player-topbar">
-          <div class="ptb-venue" id="ptb-venue-btn">
-            <div class="ptb-venue-dot"></div>
-            <span class="ptb-venue-name" id="ptb-venue-name"
-              >Le Jardin Café</span
-            >
-            <svg
-              class="ptb-venue-chevron"
-              width="13"
-              height="13"
-              viewBox="0 0 13 13"
-              fill="none"
-            >
-              <path
-                d="M3.5 5.5L6.5 8.5L9.5 5.5"
-                stroke="currentColor"
-                stroke-width="1.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <!-- Burger queue button — sits right of venue name -->
-          <button
-            class="ptb-icon-btn ptb-queue-btn"
-            onclick="openQueue()"
-            title="Queue"
-            style="margin-left: auto"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M2 4h12M2 8h12M2 12h7"
-                stroke="currentColor"
-                stroke-width="1.3"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
-          <div class="ptb-right">
-            <!-- Compact volume — icon + slider, lives in topbar -->
-            <div class="ptb-vol">
-              <button
-                class="ptb-vol-icon"
-                onclick="toggleMute()"
-                title="Volume"
-              >
-                <svg
-                  id="ptb-vol-svg"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 15 15"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                >
-                  <path
-                    d="M2 5.5h2.5l3.5-2.5v9L4.5 8.5H2v-3z"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    id="ptb-vol-wave"
-                    d="M10 4.5a3 3 0 010 6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
-              <div class="ptb-vol-rail">
-                <div
-                  class="ptb-vol-fill"
-                  id="vol-fill"
-                  style="width: 72%"
-                ></div>
-                <input
-                  type="range"
-                  class="ptb-vol-input"
-                  id="vol-range"
-                  min="0"
-                  max="100"
-                  value="72"
-                  step="1"
-                  oninput="setVol(this.value)"
-                />
-              </div>
-            </div>
-            <button
-              class="ptb-icon-btn"
-              onclick="goTo('settings')"
-              title="Settings"
-            >
-              <!-- Clean gear icon — no stray paths that look like a sun -->
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M6.5 1.8l-.4 1.3a5 5 0 00-1.1.64l-1.3-.42L2.2 4.98l.83 1.1a5 5 0 000 1.27l-.83 1.1 1.5 1.66 1.3-.42c.34.25.7.46 1.1.64l.4 1.3h2.1l.4-1.3c.4-.18.76-.39 1.1-.64l1.3.42 1.5-1.66-.83-1.1a5 5 0 000-1.27l.83-1.1-1.5-1.66-1.3.42a5 5 0 00-1.1-.64l-.4-1.3H6.5z"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-                <circle
-                  cx="7.6"
-                  cy="6.5"
-                  r="1.6"
-                  stroke="currentColor"
-                  stroke-width="1.2"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Stage -->
-        <div class="player-stage">
-          <!-- Hero traffic control — shown above orb for restaurant / retail / cafe -->
-          <div class="hero-traffic" id="hero-traffic">
-            <div class="hero-traffic-opts">
-              <button
-                class="hero-opt"
-                data-v="quiet"
-                onclick="selHeroOpt(this)"
-              >
-                Low
-              </button>
-              <button
-                class="hero-opt on"
-                data-v="moderate"
-                onclick="selHeroOpt(this)"
-              >
-                Medium
-              </button>
-              <button class="hero-opt" data-v="busy" onclick="selHeroOpt(this)">
-                High
-              </button>
-            </div>
-          </div>
-
-          <!-- Orb system -->
-          <div class="orb-system">
-            <div class="orb-ring orb-ring-1"></div>
-            <div class="orb-ring orb-ring-2"></div>
-            <div class="orb-ring orb-ring-3"></div>
-            <div class="orb-core warm" id="orb-core">
-              <div class="orb-bars" id="orb-bars">
-                <div class="ob"></div>
-                <div class="ob"></div>
-                <div class="ob"></div>
-                <div class="ob"></div>
-                <div class="ob"></div>
-                <div class="ob"></div>
-                <div class="ob"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Track identity -->
-          <div class="track-identity">
-            <div class="track-mood-line">
-              <span class="mood-tag">Now playing</span>
-              <span class="mood-tag-sep"></span>
-              <span class="mood-tag-accent" id="mood-tag">Calm · 88 bpm</span>
-            </div>
-            <div class="track-title" id="track-title">Afternoon Bossa Nova</div>
-            <div class="track-artist" id="track-artist">João Gilberto Trio</div>
-            <button class="why-btn" id="why-btn" onclick="toggleWhy()">
-              <div class="why-dot"></div>
-              Why this track?
-            </button>
-            <div class="why-expand" id="why-expand">
-              <div class="why-label-sm">AI context</div>
-              <div class="why-body" id="why-text">
-                It's mid-afternoon, traffic is moderate, and the weather outside
-                is sunny. These conditions call for warm, acoustic music around
-                88–96 BPM with a positive tone. This track fits that profile
-                closely.
-              </div>
-            </div>
-          </div>
-
-          <!-- Progress -->
-          <div class="track-progress">
-            <div class="prog-rail" id="prog-rail" onclick="seekTrack(event)">
-              <div class="prog-fill" id="prog-fill" style="width: 38%"></div>
-            </div>
-            <div class="prog-times">
-              <span id="prog-cur">1:24</span>
-              <span>3:42</span>
-            </div>
-          </div>
-
-          <!-- Control strip -->
-          <div class="ctrl-strip">
-            <!-- Shuffle -->
-            <button
-              class="ctrl-shuffle"
-              id="ctrl-shuffle"
-              onclick="toggleShuffle()"
-              title="Shuffle"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M2 5h2.5c1 0 1.8.5 2.4 1.2L9 9m3.5-4H14v2M9 9l2.1 2.8c.6.7 1.4 1.2 2.4 1.2H14v-2M14 5l-1.5 1.5M14 13l-1.5-1.5"
-                />
-                <circle
-                  cx="3.5"
-                  cy="13"
-                  r="1.5"
-                  fill="currentColor"
-                  stroke="none"
-                />
-              </svg>
-            </button>
-            <!-- Prev -->
-            <button class="ctrl-prev" onclick="skipTrack(-1)" title="Previous">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <rect x="3" y="4" width="2.5" height="12" rx="1.2" />
-                <path d="M17 4.5L7.5 10 17 15.5V4.5z" />
-              </svg>
-            </button>
-            <!-- Play / Pause -->
-            <button class="ctrl-play" id="ctrl-play" onclick="togglePlay()">
-              <svg
-                id="ctrl-play-icon"
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="currentColor"
-              >
-                <rect x="6" y="5" width="4" height="12" rx="2" />
-                <rect x="12" y="5" width="4" height="12" rx="2" />
-              </svg>
-            </button>
-            <!-- Next -->
-            <button class="ctrl-next" onclick="skipTrack(1)" title="Next">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <rect x="14.5" y="4" width="2.5" height="12" rx="1.2" />
-                <path d="M3 4.5L12.5 10 3 15.5V4.5z" />
-              </svg>
-            </button>
-            <!-- Repeat -->
-            <button
-              class="ctrl-repeat"
-              id="ctrl-repeat"
-              onclick="toggleRepeat()"
-              title="Repeat"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M2 7V5a1 1 0 011-1h12a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-2"
-                />
-                <path d="M2 9l2-2-2-2" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Context tray — single contextual control, venue-aware -->
-        <div class="context-tray">
-          <div class="ctx-handle" onclick="toggleCtx()">
-            <div class="ctx-handle-pip"></div>
-            <span class="ctx-handle-word" id="ctx-handle-word"
-              >How busy is it?</span
-            >
-            <div class="ctx-handle-pip"></div>
-          </div>
-
-          <div class="ctx-expand" id="ctx-expand">
-            <div class="ctx-hairline"></div>
-            <div class="ctx-group" id="ctx-active-group">
-              <!-- Populated dynamically by renderCtxControl() -->
-            </div>
-          </div>
-
-          <div class="ctx-peek" id="ctx-peek">
-            <span class="pk-val" id="ctx-peek-val">Moderate</span>
-          </div>
-        </div>
-        <!-- /.context-tray -->
-      </div>
-      <!-- /.player-scroll -->
+      <div class="queue-list" id="queue-list"></div>
     </div>
-    <!-- /#s-player -->
+  </div>
 
-    <!-- ════════════════════════════
+  <!-- Fixed full-screen background layers -->
+  <div class="player-canvas" id="player-canvas">
+    <div class="canvas-blob blob-a"></div>
+    <div class="canvas-blob blob-b"></div>
+    <div class="canvas-blob blob-c"></div>
+    <div class="weather-layer" id="weather-layer"></div>
+    <!-- Full-width background visualizer — lives behind all content -->
+    <canvas id="bg-viz" class="bg-viz"></canvas>
+  </div>
+  <div class="player-vignette"></div>
+
+  <!-- Scrollable content column -->
+  <div class="player-scroll">
+
+    <!-- Top bar -->
+    <div class="player-topbar">
+    <div class="ptb-venue" id="ptb-venue-btn">
+      <div class="ptb-venue-dot"></div>
+      <span class="ptb-venue-name" id="ptb-venue-name">Le Jardin Café</span>
+      <svg class="ptb-venue-chevron" width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <path d="M3.5 5.5L6.5 8.5L9.5 5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="ptb-right" style="margin-left:auto">
+      <!-- Compact volume — icon + slider, lives in topbar -->
+      <div class="ptb-vol">
+        <button class="ptb-vol-icon" onclick="toggleMute()" title="Volume">
+          <svg id="ptb-vol-svg" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M2 5.5h2.5l3.5-2.5v9L4.5 8.5H2v-3z" stroke-linejoin="round"/>
+            <path id="ptb-vol-wave" d="M10 4.5a3 3 0 010 6" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="ptb-vol-rail">
+          <div class="ptb-vol-fill" id="vol-fill" style="width:72%"></div>
+          <input type="range" class="ptb-vol-input" id="vol-range" min="0" max="100" value="72" step="1" oninput="setVol(this.value)">
+        </div>
+      </div>
+      <!-- Queue button — after volume -->
+      <button class="ptb-icon-btn" onclick="openQueue()" title="Queue">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4h12M2 8h12M2 12h7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="ptb-icon-btn" onclick="goTo('settings')" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6.5 1.8l-.4 1.3a5 5 0 00-1.1.64l-1.3-.42L2.2 4.98l.83 1.1a5 5 0 000 1.27l-.83 1.1 1.5 1.66 1.3-.42c.34.25.7.46 1.1.64l.4 1.3h2.1l.4-1.3c.4-.18.76-.39 1.1-.64l1.3.42 1.5-1.66-.83-1.1a5 5 0 000-1.27l.83-1.1-1.5-1.66-1.3.42a5 5 0 00-1.1-.64l-.4-1.3H6.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <circle cx="7.6" cy="6.5" r="1.6" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stage -->
+  <div class="player-stage">
+
+    <!-- 1. Traffic control — top of hero, primary live input -->
+    <div class="inline-traffic" id="hero-traffic">
+      <span class="inline-traffic-label" id="traffic-label">Traffic level</span>
+      <div class="inline-traffic-opts">
+        <button class="hero-opt" data-v="quiet"    onclick="selHeroOpt(this)">Low</button>
+        <button class="hero-opt on" data-v="moderate" onclick="selHeroOpt(this)">Medium</button>
+        <button class="hero-opt" data-v="busy"     onclick="selHeroOpt(this)">High</button>
+      </div>
+    </div>
+
+    <!-- 3. Track identity — the music result -->
+    <div class="track-identity">
+      <div class="track-title" id="track-title">Afternoon Bossa Nova</div>
+      <div class="track-artist" id="track-artist">João Gilberto Trio</div>
+      <div class="track-mood-line">
+        <span class="weather-tag" id="weather-tag"></span>
+        <span class="mood-tag">Now playing</span>
+        <span class="mood-tag-sep"></span>
+        <span class="mood-tag-accent" id="mood-tag">Calm · 88 bpm</span>
+      </div>
+      <button class="why-btn" id="why-btn" onclick="toggleWhy()">
+        <div class="why-dot"></div>
+        Why this track?
+      </button>
+      <div class="why-expand" id="why-expand">
+        <div class="why-label-sm">AI context</div>
+        <div class="why-body" id="why-text">It's mid-afternoon, traffic is moderate, and the weather outside is sunny. These conditions call for warm, acoustic music around 88–96 BPM with a positive tone. This track fits that profile closely.</div>
+      </div>
+    </div>
+
+    <!-- 4. Progress -->
+    <div class="track-progress">
+      <div class="prog-rail" id="prog-rail" onclick="seekTrack(event)">
+        <div class="prog-fill" id="prog-fill" style="width:38%"></div>
+      </div>
+      <div class="prog-times">
+        <span id="prog-cur">1:24</span>
+        <span>3:42</span>
+      </div>
+    </div>
+
+    <!-- 5. Playback controls -->
+    <div class="ctrl-strip">
+      <button class="ctrl-shuffle" id="ctrl-shuffle" onclick="toggleShuffle()" title="Shuffle">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 5h2.5c1 0 1.8.5 2.4 1.2L9 9m3.5-4H14v2M9 9l2.1 2.8c.6.7 1.4 1.2 2.4 1.2H14v-2M14 5l-1.5 1.5M14 13l-1.5-1.5"/>
+          <circle cx="3.5" cy="13" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+      <button class="ctrl-prev" onclick="skipTrack(-1)" title="Previous">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <rect x="3" y="4" width="2.5" height="12" rx="1.2"/>
+          <path d="M17 4.5L7.5 10 17 15.5V4.5z"/>
+        </svg>
+      </button>
+      <button class="ctrl-play" id="ctrl-play" onclick="togglePlay()">
+        <svg id="ctrl-play-icon" width="22" height="22" viewBox="0 0 22 22" fill="currentColor">
+          <rect x="6" y="5" width="4" height="12" rx="2"/>
+          <rect x="12" y="5" width="4" height="12" rx="2"/>
+        </svg>
+      </button>
+      <button class="ctrl-next" onclick="skipTrack(1)" title="Next">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <rect x="14.5" y="4" width="2.5" height="12" rx="1.2"/>
+          <path d="M3 4.5L12.5 10 3 15.5V4.5z"/>
+        </svg>
+      </button>
+      <button class="ctrl-repeat" id="ctrl-repeat" onclick="toggleRepeat()" title="Repeat">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 7V5a1 1 0 011-1h12a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-2"/>
+          <path d="M2 9l2-2-2-2"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  </div><!-- /.player-scroll -->
+</div><!-- /#s-player -->
+
+<!-- ════════════════════════════
      SCREEN: SETTINGS
 ════════════════════════════ -->
-    <div id="s-settings" class="scr">
-      <div class="settings-topbar">
-        <div class="settings-back" onclick="goTo('player')">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M10 13L5 8l5-5"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          Back
+<div id="s-settings" class="scr">
+  <div class="settings-topbar">
+    <div class="settings-back" onclick="goTo('player')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back
+    </div>
+    <div class="settings-title">Settings</div>
+    <div style="width:52px"></div>
+  </div>
+
+  <div class="settings-body">
+    <div class="sg-title">Venue</div>
+    <div class="sg-block">
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Venue name</div>
+          <div class="sg-row-desc">Shown in the player and notifications</div>
         </div>
-        <div class="settings-title">Settings</div>
-        <div style="width: 52px"></div>
+        <div class="sg-row-right">
+          <span class="sg-link" onclick="editName()" id="sg-vname">Le Jardin Café</span>
+        </div>
       </div>
-
-      <div class="settings-body">
-        <div class="sg-title">Venue</div>
-        <div class="sg-block">
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Venue name</div>
-              <div class="sg-row-desc">
-                Shown in the player and notifications
-              </div>
-            </div>
-            <div class="sg-row-right">
-              <span class="sg-link" onclick="editName()" id="sg-vname"
-                >Le Jardin Café</span
-              >
-            </div>
-          </div>
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Venue type</div>
-              <div class="sg-row-desc">Shapes the style of music selected</div>
-            </div>
-            <div class="sg-row-right">
-              <span class="sg-value" id="sg-vtype">Restaurant</span>
-            </div>
-          </div>
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Brand level</div>
-              <div class="sg-row-desc">Matches music tone to your space</div>
-            </div>
-            <div class="sg-row-right">
-              <div
-                class="sg-brand-row"
-                id="sg-brand-row"
-                style="min-width: 180px"
-              >
-                <div class="sg-brand-opt" onclick="selSgBrand(this)">
-                  Budget
-                </div>
-                <div class="sg-brand-opt on" onclick="selSgBrand(this)">
-                  Mid-range
-                </div>
-                <div class="sg-brand-opt" onclick="selSgBrand(this)">
-                  Luxury
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="sg-row"
-            style="cursor: pointer"
-            onclick="toast('Multiple venues available on Pro+. Upgrade in billing.')"
-          >
-            <div class="sg-row-left">
-              <div class="sg-row-name">Add another venue</div>
-              <div class="sg-row-desc">
-                Each venue gets its own music profile
-              </div>
-            </div>
-            <div class="sg-row-right">
-              <span class="sg-value" style="color: var(--c5)">›</span>
-            </div>
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Venue type</div>
+          <div class="sg-row-desc">Shapes the style of music selected</div>
+        </div>
+        <div class="sg-row-right"><span class="sg-value" id="sg-vtype">Restaurant</span></div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Brand level</div>
+          <div class="sg-row-desc">Matches music tone to your space</div>
+        </div>
+        <div class="sg-row-right">
+          <div class="sg-brand-row" id="sg-brand-row" style="min-width:180px">
+            <div class="sg-brand-opt" onclick="selSgBrand(this)">Budget</div>
+            <div class="sg-brand-opt on" onclick="selSgBrand(this)">Mid-range</div>
+            <div class="sg-brand-opt" onclick="selSgBrand(this)">Luxury</div>
           </div>
         </div>
-
-        <div class="sg-title">Music</div>
-        <div class="sg-block">
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Smooth transitions</div>
-              <div class="sg-row-desc">
-                Tracks blend with a 3-second crossfade
-              </div>
-            </div>
-            <div class="sg-row-right">
-              <label class="tg">
-                <input
-                  type="checkbox"
-                  checked
-                  onchange="onToggle(this,'Crossfade transitions')"
-                />
-                <div class="tg-track"></div>
-                <div class="tg-thumb"></div>
-              </label>
-            </div>
-          </div>
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Auto-detect time of day</div>
-              <div class="sg-row-desc">
-                Reads your device time and adjusts automatically
-              </div>
-            </div>
-            <div class="sg-row-right">
-              <label class="tg">
-                <input
-                  type="checkbox"
-                  checked
-                  onchange="onToggle(this,'Auto time of day')"
-                />
-                <div class="tg-track"></div>
-                <div class="tg-thumb"></div>
-              </label>
-            </div>
-          </div>
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Exclude explicit content</div>
-              <div class="sg-row-desc">
-                Filters tracks with explicit language
-              </div>
-            </div>
-            <div class="sg-row-right">
-              <label class="tg">
-                <input
-                  type="checkbox"
-                  onchange="onToggle(this,'Explicit filter')"
-                />
-                <div class="tg-track"></div>
-                <div class="tg-thumb"></div>
-              </label>
-            </div>
-          </div>
+      </div>
+      <div class="sg-row" style="cursor:pointer" onclick="toast('Multiple venues available on Pro+. Upgrade in billing.')">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Add another venue</div>
+          <div class="sg-row-desc">Each venue gets its own music profile</div>
         </div>
+        <div class="sg-row-right"><span class="sg-value" style="color:var(--c5)">›</span></div>
+      </div>
+    </div>
 
-        <div class="sg-title">Account</div>
-        <div class="sg-block">
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Signed in as</div>
-              <div class="sg-row-desc">nour.zaki@gmail.com</div>
-            </div>
-            <div class="sg-row-right">
-              <span class="sg-link" onclick="signOut()">Sign out</span>
-            </div>
-          </div>
-          <div class="sg-row">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Plan</div>
-              <div class="sg-row-desc">Pro · Renews March 14, 2026</div>
-            </div>
-            <div class="sg-row-right">
-              <span class="sg-link" onclick="toast('Opening billing portal…')"
-                >Manage</span
-              >
-            </div>
-          </div>
+    <div class="sg-title">Music</div>
+    <div class="sg-block">
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Smooth transitions</div>
+          <div class="sg-row-desc">Tracks blend with a 3-second crossfade</div>
         </div>
-
-        <div class="sg-title" style="color: var(--rose)">Danger zone</div>
-        <div class="sg-block sg-danger">
-          <div class="sg-row" style="cursor: pointer" onclick="openModal()">
-            <div class="sg-row-left">
-              <div class="sg-row-name">Delete this venue</div>
-              <div class="sg-row-desc" style="color: rgba(240, 104, 128, 0.55)">
-                Removes venue, history, and stops music permanently
-              </div>
-            </div>
-            <div class="sg-row-right">
-              <span class="sg-value" style="color: var(--rose)">›</span>
-            </div>
-          </div>
+        <div class="sg-row-right">
+          <label class="tg">
+            <input type="checkbox" checked onchange="onToggle(this,'Crossfade transitions')">
+            <div class="tg-track"></div>
+            <div class="tg-thumb"></div>
+          </label>
+        </div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Auto-detect time of day</div>
+          <div class="sg-row-desc">Reads your device time and adjusts automatically</div>
+        </div>
+        <div class="sg-row-right">
+          <label class="tg">
+            <input type="checkbox" checked onchange="onToggle(this,'Auto time of day')">
+            <div class="tg-track"></div>
+            <div class="tg-thumb"></div>
+          </label>
+        </div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Exclude explicit content</div>
+          <div class="sg-row-desc">Filters tracks with explicit language</div>
+        </div>
+        <div class="sg-row-right">
+          <label class="tg">
+            <input type="checkbox" onchange="onToggle(this,'Explicit filter')">
+            <div class="tg-track"></div>
+            <div class="tg-thumb"></div>
+          </label>
         </div>
       </div>
     </div>
 
-    <script>
-      /* ── State ── */
-      const TRACKS = [
-        {
-          title: "Afternoon Bossa Nova",
-          artist: "João Gilberto Trio",
-          mood: "Calm · 88 bpm",
-          why: "It's mid-afternoon, traffic is moderate, and the weather is sunny. These conditions call for warm, acoustic music around 88–96 BPM with a positive tone. This track fits that profile closely.",
-          orb: "warm",
-          mood_cls: "mood-warm",
-        },
-        {
-          title: "Smooth Jazz Interlude",
-          artist: "Blue Room Collective",
-          mood: "Warm · 94 bpm",
-          why: "Your mid-range brand and moderate afternoon traffic favour jazz instrumentals at this tempo — research shows they extend average customer dwell time in restaurant environments.",
-          orb: "warm",
-          mood_cls: "mood-warm",
-        },
-        {
-          title: "Evening Electric",
-          artist: "Neon Pulse",
-          mood: "Focused · 110 bpm",
-          why: "Higher traffic in the evening calls for more energy. This track's clean electronic texture keeps the space feeling alive without becoming overwhelming.",
-          orb: "cool",
-          mood_cls: "mood-cool",
-        },
-        {
-          title: "Folk Afternoon",
-          artist: "Meadow Tones",
-          mood: "Relaxed · 82 bpm",
-          why: "Sunny weather and a calm afternoon favour something organic. This acoustic folk track has a high valence matching the positive outdoor conditions today.",
-          orb: "green",
-          mood_cls: "mood-green",
-        },
-        {
-          title: "Deep House Drift",
-          artist: "Cobalt Room",
-          mood: "Steady · 118 bpm",
-          why: "Late evening and moderate traffic call for a deeper, more hypnotic groove. This track holds the space without demanding attention.",
-          orb: "night",
-          mood_cls: "mood-night",
-        },
-      ];
+    <div class="sg-title">Account</div>
+    <div class="sg-block">
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Signed in as</div>
+          <div class="sg-row-desc">nour.zaki@gmail.com</div>
+        </div>
+        <div class="sg-row-right"><span class="sg-link" onclick="signOut()">Sign out</span></div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Plan</div>
+          <div class="sg-row-desc">Pro · Renews March 14, 2026</div>
+        </div>
+        <div class="sg-row-right"><span class="sg-link" onclick="toast('Opening billing portal…')">Manage</span></div>
+      </div>
+    </div>
 
-      let state = {
-        screen: "login",
-        trackIdx: 0,
-        playing: true,
-        progPct: 38,
-        vol: 72,
-        ctxOpen: false,
-        whyOpen: false,
-        venueName: "Le Jardin Café",
-        venueType: "restaurant",
-        shuffle: false,
-        repeat: false,
-        _prevVol: 72,
-      };
-      let progTimer = null;
+    <div class="sg-title" style="color:var(--rose)">Danger zone</div>
+    <div class="sg-block sg-danger">
+      <div class="sg-row" style="cursor:pointer" onclick="openModal()">
+        <div class="sg-row-left">
+          <div class="sg-row-name">Delete this venue</div>
+          <div class="sg-row-desc" style="color:rgba(240,104,128,0.55)">Removes venue, history, and stops music permanently</div>
+        </div>
+        <div class="sg-row-right"><span class="sg-value" style="color:var(--rose)">›</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      /* ── Navigation ── */
-      function goTo(s) {
-        document
-          .querySelectorAll(".scr")
-          .forEach((el) => el.classList.remove("active"));
-        document.getElementById("s-" + s).classList.add("active");
-        state.screen = s;
-        if (s === "player") {
-          startProg();
-          applyMood(TRACKS[state.trackIdx]);
-        }
-      }
+<script>
+/* ── State ── */
+const TRACKS = [
+  { title:"Afternoon Bossa Nova", artist:"João Gilberto Trio", mood:"Calm · 88 bpm",
+    why:"It's mid-afternoon, traffic is moderate, and the weather is sunny. These conditions call for warm, acoustic music around 88–96 BPM with a positive tone. This track fits that profile closely.", orb:"warm", mood_cls:"mood-warm" },
+  { title:"Smooth Jazz Interlude", artist:"Blue Room Collective", mood:"Warm · 94 bpm",
+    why:"Your mid-range brand and moderate afternoon traffic favour jazz instrumentals at this tempo — research shows they extend average customer dwell time in restaurant environments.", orb:"warm", mood_cls:"mood-warm" },
+  { title:"Evening Electric", artist:"Neon Pulse", mood:"Focused · 110 bpm",
+    why:"Higher traffic in the evening calls for more energy. This track's clean electronic texture keeps the space feeling alive without becoming overwhelming.", orb:"cool", mood_cls:"mood-cool" },
+  { title:"Folk Afternoon", artist:"Meadow Tones", mood:"Relaxed · 82 bpm",
+    why:"Sunny weather and a calm afternoon favour something organic. This acoustic folk track has a high valence matching the positive outdoor conditions today.", orb:"green", mood_cls:"mood-green" },
+  { title:"Deep House Drift", artist:"Cobalt Room", mood:"Steady · 118 bpm",
+    why:"Late evening and moderate traffic call for a deeper, more hypnotic groove. This track holds the space without demanding attention.", orb:"night", mood_cls:"mood-night" },
+];
 
-      /* ── Login ── */
-      function doLogin() {
-        const btn = document.getElementById("login-btn");
-        btn.textContent = "Signing in…";
-        btn.disabled = true;
-        setTimeout(() => {
-          btn.textContent = "Continue with Google";
-          btn.disabled = false;
-          goTo("onboard");
-        }, 800);
-      }
+let state = { screen:'login', trackIdx:0, playing:true, progPct:38, vol:72, ctxOpen:false, whyOpen:false, venueName:'Le Jardin Café', venueType:'restaurant', shuffle:false, repeat:false, _prevVol:72 };
+let progTimer = null;
 
-      /* ── Onboarding ── */
-      function selectObVenue(el) {
-        document
-          .querySelectorAll(".ob-venue-tile")
-          .forEach((t) => t.classList.remove("on"));
-        el.classList.add("on");
-        state.venueType = el.dataset.v;
-      }
-      function selectObBrand(el) {
-        el.closest(".ob-brand-row")
-          .querySelectorAll(".ob-brand-opt")
-          .forEach((o) => o.classList.remove("on"));
-        el.classList.add("on");
-      }
-      function obNext() {
-        document.getElementById("ob-1").style.display = "none";
-        document.getElementById("ob-2").style.display = "block";
-      }
-      function obBack() {
-        document.getElementById("ob-2").style.display = "none";
-        document.getElementById("ob-1").style.display = "block";
-      }
-      function obFinish() {
-        const name =
-          document.getElementById("ob-name").value.trim() || "My Venue";
-        state.venueName = name;
-        const selected = document.querySelector(".ob-venue-tile.on");
-        state.venueType = selected ? selected.dataset.v : "restaurant";
-        document.getElementById("ptb-venue-name").textContent = name;
-        document.getElementById("sg-vname").textContent = name;
-        const btn = document.querySelector("#ob-2 .ob-cta");
-        btn.textContent = "Setting up your venue…";
-        btn.disabled = true;
-        setTimeout(() => {
-          btn.textContent = "Start playing music";
-          btn.disabled = false;
-          const typeEl = document.getElementById("sg-vtype");
-          if (typeEl) typeEl.textContent = cap(state.venueType);
-          renderCtxControl();
-          goTo("player");
-          toast("Your venue is ready. Music is starting now.", true);
-        }, 900);
-      }
+/* ── Navigation ── */
+function goTo(s) {
+  document.querySelectorAll('.scr').forEach(el => el.classList.remove('active'));
+  document.getElementById('s-'+s).classList.add('active');
+  state.screen = s;
+  if (s === 'player') { startProg(); applyMood(TRACKS[state.trackIdx]); }
+}
 
-      /* ── Track management ── */
-      function loadTrack(idx) {
-        const t = TRACKS[idx];
-        const titleEl = document.getElementById("track-title");
-        const artistEl = document.getElementById("track-artist");
-        titleEl.classList.add("changing");
-        artistEl.classList.add("changing");
-        setTimeout(() => {
-          titleEl.textContent = t.title;
-          artistEl.textContent = t.artist;
-          document.getElementById("mood-tag").textContent = t.mood;
-          document.getElementById("why-text").textContent = t.why;
-          titleEl.classList.remove("changing");
-          artistEl.classList.remove("changing");
-          applyMood(t);
-          if (state.playing) toast("Transitioning…");
-        }, 280);
-        state.progPct = 1;
-      }
+/* ── Login ── */
+function doLogin() {
+  const btn = document.getElementById('login-btn');
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent='Continue with Google'; btn.disabled=false; goTo('onboard'); }, 800);
+}
 
-      function applyMood(t) {
-        const sp = document.getElementById("s-player");
-        sp.classList.remove(
-          "mood-warm",
-          "mood-cool",
-          "mood-green",
-          "mood-night"
-        );
-        sp.classList.add(t.mood_cls);
-        const core = document.getElementById("orb-core");
-        core.className = "orb-core " + t.orb;
-        updatePeek();
-      }
+/* ── Onboarding ── */
+function selectObVenue(el) {
+  document.querySelectorAll('.ob-venue-tile').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  state.venueType = el.dataset.v;
+}
+function selectObBrand(el) {
+  el.closest('.ob-brand-row').querySelectorAll('.ob-brand-opt').forEach(o => o.classList.remove('on'));
+  el.classList.add('on');
+}
+function obNext() { document.getElementById('ob-1').style.display='none'; document.getElementById('ob-2').style.display='block'; }
+function obBack() { document.getElementById('ob-2').style.display='none'; document.getElementById('ob-1').style.display='block'; }
+function obFinish() {
+  const name = document.getElementById('ob-name').value.trim() || 'My Venue';
+  state.venueName = name;
+  const selected = document.querySelector('.ob-venue-tile.on');
+  state.venueType = selected ? selected.dataset.v : 'restaurant';
+  document.getElementById('ptb-venue-name').textContent = name;
+  document.getElementById('sg-vname').textContent = name;
+  const btn = document.querySelector('#ob-2 .ob-cta');
+  btn.textContent = 'Setting up your venue…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Start playing music'; btn.disabled = false;
+    const typeEl = document.getElementById('sg-vtype');
+    if (typeEl) typeEl.textContent = cap(state.venueType);
+    renderCtxControl();
+    goTo('player');
+    toast('Your venue is ready. Music is starting now.', true);
+  }, 900);
+}
 
-      function skipTrack(dir) {
-        if (state.shuffle && dir === 1) {
-          let next;
-          do {
-            next = Math.floor(Math.random() * TRACKS.length);
-          } while (next === state.trackIdx && TRACKS.length > 1);
-          state.trackIdx = next;
-        } else {
-          state.trackIdx =
-            (state.trackIdx + dir + TRACKS.length) % TRACKS.length;
-        }
+/* ── Track management ── */
+function loadTrack(idx) {
+  const t = TRACKS[idx];
+  const titleEl  = document.getElementById('track-title');
+  const artistEl = document.getElementById('track-artist');
+  titleEl.classList.add('changing');
+  artistEl.classList.add('changing');
+  setTimeout(() => {
+    titleEl.textContent  = t.title;
+    artistEl.textContent = t.artist;
+    document.getElementById('mood-tag').textContent  = t.mood;
+    document.getElementById('why-text').textContent  = getWeatherWhy(t.why);
+    titleEl.classList.remove('changing');
+    artistEl.classList.remove('changing');
+    applyMood(t);
+    if (state.playing) toast('Transitioning…');
+  }, 280);
+  state.progPct = 1;
+}
+
+/* ── Weather — invisible to UI, felt through background + mood line ── */
+const WEATHER_CLASSES = ['weather-sunny','weather-cloudy','weather-rain','weather-night'];
+
+// Human-readable label for mood line (no icons)
+const WEATHER_LABELS = {
+  'weather-sunny':  'Sunny',
+  'weather-cloudy': 'Cloudy',
+  'weather-rain':   'Rainy',
+  'weather-night':  'Night',
+};
+
+// Contextual phrases for "Why this track" weather sentences
+const WEATHER_PHRASES = {
+  'weather-sunny':  'It\'s a bright, sunny atmosphere — warm and positive',
+  'weather-cloudy': 'The light is soft and overcast — calm and balanced',
+  'weather-rain':   'There\'s a cool, rainy feel outside — introspective and still',
+  'weather-night':  'It\'s late and quiet — the space feels intimate',
+};
+
+let currentWeatherCls = '';
+
+function setWeather(cls) {
+  const sp = document.getElementById('s-player');
+  WEATHER_CLASSES.forEach(c => sp.classList.remove(c));
+  if (cls) sp.classList.add(cls);
+  currentWeatherCls = cls || '';
+  // Update the subtle weather label in the mood line
+  const tag = document.getElementById('weather-tag');
+  if (tag) tag.textContent = WEATHER_LABELS[cls] || '';
+}
+
+function setWeatherFromTime() {
+  const h = new Date().getHours();
+  let cls;
+  if      (h >= 22 || h < 5)  cls = 'weather-night';
+  else if (h >= 18)            cls = 'weather-night';
+  else if (h >= 7 && h < 17)  cls = 'weather-sunny';
+  else                         cls = 'weather-cloudy';
+  setWeather(cls);
+}
+
+// Build a contextual why-text that references the current weather
+function getWeatherWhy(baseWhy) {
+  const phrase = WEATHER_PHRASES[currentWeatherCls];
+  if (!phrase) return baseWhy;
+  // Prepend weather context naturally
+  return phrase + '. ' + baseWhy;
+}
+
+function applyMood(t) {
+  const sp = document.getElementById('s-player');
+  sp.classList.remove('mood-warm','mood-cool','mood-green','mood-night');
+  sp.classList.add(t.mood_cls);
+  const core = document.getElementById('orb-core');
+  if (core) core.className = 'orb-core ' + t.orb;
+  updatePeek();
+}
+
+function skipTrack(dir) {
+  if (state.shuffle && dir === 1) {
+    let next;
+    do { next = Math.floor(Math.random() * TRACKS.length); } while (next === state.trackIdx && TRACKS.length > 1);
+    state.trackIdx = next;
+  } else {
+    state.trackIdx = (state.trackIdx + dir + TRACKS.length) % TRACKS.length;
+  }
+  loadTrack(state.trackIdx);
+}
+
+function toggleShuffle() {
+  state.shuffle = !state.shuffle;
+  document.getElementById('ctrl-shuffle').classList.toggle('on', state.shuffle);
+  toast(state.shuffle ? 'Shuffle on.' : 'Shuffle off.', state.shuffle);
+}
+
+function toggleRepeat() {
+  state.repeat = !state.repeat;
+  document.getElementById('ctrl-repeat').classList.toggle('on', state.repeat);
+  toast(state.repeat ? 'Repeat on.' : 'Repeat off.', state.repeat);
+}
+
+/* ── Playback ── */
+function togglePlay() {
+  state.playing = !state.playing;
+  const icon = document.getElementById('ctrl-play-icon');
+  if (state.playing) {
+    icon.innerHTML = '<rect x="6" y="5" width="4" height="12" rx="2"/><rect x="12" y="5" width="4" height="12" rx="2"/>';
+    startProg();
+    toast('Playing.');
+    document.dispatchEvent(new Event('moodplay:play'));
+  } else {
+    icon.innerHTML = '<path d="M5 3l12 8-12 8V3z"/>';
+    clearInterval(progTimer);
+    toast('Paused.');
+    document.dispatchEvent(new Event('moodplay:pause'));
+  }
+}
+
+function startProg() {
+  clearInterval(progTimer);
+  if (!state.playing) return;
+  progTimer = setInterval(() => {
+    state.progPct += 0.035;
+    if (state.progPct >= 100) {
+      state.progPct = 0;
+      if (state.repeat) {
+        loadTrack(state.trackIdx);
+      } else if (state.shuffle) {
+        let next;
+        do { next = Math.floor(Math.random() * TRACKS.length); } while (next === state.trackIdx && TRACKS.length > 1);
+        state.trackIdx = next;
+        loadTrack(state.trackIdx);
+      } else {
+        state.trackIdx = (state.trackIdx + 1) % TRACKS.length;
         loadTrack(state.trackIdx);
       }
+    }
+    updateProgUI();
+  }, 100);
+}
 
-      function toggleShuffle() {
-        state.shuffle = !state.shuffle;
-        document
-          .getElementById("ctrl-shuffle")
-          .classList.toggle("on", state.shuffle);
-        toast(state.shuffle ? "Shuffle on." : "Shuffle off.", state.shuffle);
-      }
+function updateProgUI() {
+  const pct = Math.min(100, state.progPct);
+  document.getElementById('prog-fill').style.width = pct.toFixed(2)+'%';
+  const totalS = 222;
+  const cur = Math.round(totalS * pct / 100);
+  const m = Math.floor(cur/60), s = String(cur%60).padStart(2,'0');
+  document.getElementById('prog-cur').textContent = `${m}:${s}`;
+}
 
-      function toggleRepeat() {
-        state.repeat = !state.repeat;
-        document
-          .getElementById("ctrl-repeat")
-          .classList.toggle("on", state.repeat);
-        toast(state.repeat ? "Repeat on." : "Repeat off.", state.repeat);
-      }
+function seekTrack(e) {
+  const rect = document.getElementById('prog-rail').getBoundingClientRect();
+  state.progPct = Math.max(0, Math.min(100, (e.clientX - rect.left) / rect.width * 100));
+  updateProgUI();
+}
 
-      /* ── Playback ── */
-      function togglePlay() {
-        state.playing = !state.playing;
-        const icon = document.getElementById("ctrl-play-icon");
-        const bars = document.querySelectorAll(".ob");
-        if (state.playing) {
-          icon.innerHTML =
-            '<rect x="6" y="5" width="4" height="12" rx="2"/><rect x="12" y="5" width="4" height="12" rx="2"/>';
-          bars.forEach((b) => b.classList.remove("paused"));
-          startProg();
-          toast("Playing.");
-        } else {
-          icon.innerHTML = '<path d="M5 3l12 8-12 8V3z"/>';
-          bars.forEach((b) => b.classList.add("paused"));
-          clearInterval(progTimer);
-          toast("Paused.");
-        }
-      }
+/* ── Volume ── */
+function setVol(v) {
+  state.vol = +v;
+  const fill = document.getElementById('vol-fill');
+  if (fill) fill.style.width = v + '%';
+  const wave = document.getElementById('ptb-vol-wave');
+  if (wave) wave.style.opacity = +v === 0 ? '0' : '1';
+}
+function toggleMute() {
+  const range = document.getElementById('vol-range');
+  if (!range) return;
+  if (+range.value > 0) {
+    state._prevVol = +range.value;
+    range.value = 0;
+    setVol(0);
+    document.getElementById('ptb-vol-svg').innerHTML =
+      '<path d="M2 5.5h2.5l3.5-2.5v9L4.5 8.5H2v-3z" stroke-linejoin="round"/>' +
+      '<path d="M10.5 5.5l3 4M13.5 5.5l-3 4" stroke-linecap="round"/>';
+  } else {
+    range.value = state._prevVol || 72;
+    setVol(range.value);
+    document.getElementById('ptb-vol-svg').innerHTML =
+      '<path d="M2 5.5h2.5l3.5-2.5v9L4.5 8.5H2v-3z" stroke-linejoin="round"/>' +
+      '<path id="ptb-vol-wave" d="M10 4.5a3 3 0 010 6" stroke-linecap="round"/>';
+  }
+}
 
-      function startProg() {
-        clearInterval(progTimer);
-        if (!state.playing) return;
-        progTimer = setInterval(() => {
-          state.progPct += 0.035;
-          if (state.progPct >= 100) {
-            state.progPct = 0;
-            if (state.repeat) {
-              loadTrack(state.trackIdx);
-            } else if (state.shuffle) {
-              let next;
-              do {
-                next = Math.floor(Math.random() * TRACKS.length);
-              } while (next === state.trackIdx && TRACKS.length > 1);
-              state.trackIdx = next;
-              loadTrack(state.trackIdx);
-            } else {
-              state.trackIdx = (state.trackIdx + 1) % TRACKS.length;
-              loadTrack(state.trackIdx);
-            }
-          }
-          updateProgUI();
-        }, 100);
-      }
+/* ── Why drawer ── */
+function toggleWhy() {
+  state.whyOpen = !state.whyOpen;
+  const panel = document.getElementById('why-expand');
+  const btn   = document.getElementById('why-btn');
+  panel.classList.toggle('open', state.whyOpen);
+  btn.classList.toggle('active', state.whyOpen);
+}
 
-      function updateProgUI() {
-        const pct = Math.min(100, state.progPct);
-        document.getElementById("prog-fill").style.width = pct.toFixed(2) + "%";
-        const totalS = 222;
-        const cur = Math.round((totalS * pct) / 100);
-        const m = Math.floor(cur / 60),
-          s = String(cur % 60).padStart(2, "0");
-        document.getElementById("prog-cur").textContent = `${m}:${s}`;
-      }
-
-      function seekTrack(e) {
-        const rect = document
-          .getElementById("prog-rail")
-          .getBoundingClientRect();
-        state.progPct = Math.max(
-          0,
-          Math.min(100, ((e.clientX - rect.left) / rect.width) * 100)
-        );
-        updateProgUI();
-      }
-
-      /* ── Volume ── */
-      function setVol(v) {
-        state.vol = +v;
-        const fill = document.getElementById("vol-fill");
-        if (fill) fill.style.width = v + "%";
-        const wave = document.getElementById("ptb-vol-wave");
-        if (wave) wave.style.opacity = +v === 0 ? "0" : "1";
-      }
-      function toggleMute() {
-        const range = document.getElementById("vol-range");
-        if (!range) return;
-        if (+range.value > 0) {
-          state._prevVol = +range.value;
-          range.value = 0;
-          setVol(0);
-          document.getElementById("ptb-vol-svg").innerHTML =
-            '<path d="M2 5.5h2.5l3.5-2.5v9L4.5 8.5H2v-3z" stroke-linejoin="round"/>' +
-            '<path d="M10.5 5.5l3 4M13.5 5.5l-3 4" stroke-linecap="round"/>';
-        } else {
-          range.value = state._prevVol || 72;
-          setVol(range.value);
-          document.getElementById("ptb-vol-svg").innerHTML =
-            '<path d="M2 5.5h2.5l3.5-2.5v9L4.5 8.5H2v-3z" stroke-linejoin="round"/>' +
-            '<path id="ptb-vol-wave" d="M10 4.5a3 3 0 010 6" stroke-linecap="round"/>';
-        }
-      }
-
-      /* ── Why drawer ── */
-      function toggleWhy() {
-        state.whyOpen = !state.whyOpen;
-        const panel = document.getElementById("why-expand");
-        const btn = document.getElementById("why-btn");
-        panel.classList.toggle("open", state.whyOpen);
-        btn.classList.toggle("active", state.whyOpen);
-      }
-
-      /* ── Queue drawer ── */
-      function openQueue() {
-        renderQueue();
-        document.getElementById("queue-drawer").classList.add("open");
-      }
-      function closeQueue() {
-        document.getElementById("queue-drawer").classList.remove("open");
-      }
-      function renderQueue() {
-        const list = document.getElementById("queue-list");
-        list.innerHTML = TRACKS.map((t, i) => {
-          const isActive = i === state.trackIdx;
-          const numEl = isActive
-            ? `<div class="queue-track-playing">
-           <div class="qtb${!state.playing ? " paused" : ""}"></div>
-           <div class="qtb${!state.playing ? " paused" : ""}"></div>
-           <div class="qtb${!state.playing ? " paused" : ""}"></div>
+/* ── Queue drawer ── */
+function openQueue() {
+  renderQueue();
+  document.getElementById('queue-drawer').classList.add('open');
+}
+function closeQueue() {
+  document.getElementById('queue-drawer').classList.remove('open');
+}
+function renderQueue() {
+  const list = document.getElementById('queue-list');
+  list.innerHTML = TRACKS.map((t, i) => {
+    const isActive = i === state.trackIdx;
+    const numEl = isActive
+      ? `<div class="queue-track-playing">
+           <div class="qtb${!state.playing ? ' paused' : ''}"></div>
+           <div class="qtb${!state.playing ? ' paused' : ''}"></div>
+           <div class="qtb${!state.playing ? ' paused' : ''}"></div>
          </div>`
-            : i + 1;
-          return `<div class="queue-track${
-            isActive ? " active" : ""
-          }" onclick="jumpToTrack(${i})">
+      : (i + 1);
+    return `<div class="queue-track${isActive ? ' active' : ''}" onclick="jumpToTrack(${i})">
       <div class="queue-track-num">${numEl}</div>
       <div class="queue-track-info">
         <div class="queue-track-name">${t.title}</div>
@@ -3255,276 +2343,197 @@
       </div>
       <div class="queue-track-mood">${t.mood}</div>
     </div>`;
-        }).join("");
-      }
-      function jumpToTrack(idx) {
-        state.trackIdx = idx;
-        state.progPct = 1;
-        loadTrack(idx);
-        closeQueue();
-        if (!state.playing) togglePlay();
-      }
+  }).join('');
+}
+function jumpToTrack(idx) {
+  state.trackIdx = idx;
+  state.progPct = 1;
+  loadTrack(idx);
+  closeQueue();
+  if (!state.playing) togglePlay();
+}
 
-      const CTX_CONFIG = {
-        // retail, restaurant, café, spa  → traffic
-        retail: {
-          type: "traffic",
-          label: "How busy is it?",
-          opts: ["Quiet", "Moderate", "Busy", "Rush hour"],
-          default: "moderate",
-          moodMap: {
-            quiet: "cool",
-            moderate: "warm",
-            busy: "warm",
-            rush: "night",
-          },
-        },
-        restaurant: {
-          type: "traffic",
-          label: "How busy is it?",
-          opts: ["Quiet", "Moderate", "Busy", "Rush hour"],
-          default: "moderate",
-          moodMap: {
-            quiet: "cool",
-            moderate: "warm",
-            busy: "warm",
-            rush: "night",
-          },
-        },
-        cafe: {
-          type: "traffic",
-          label: "How busy is it?",
-          opts: ["Quiet", "Moderate", "Busy", "Rush hour"],
-          default: "moderate",
-          moodMap: {
-            quiet: "cool",
-            moderate: "warm",
-            busy: "warm",
-            rush: "night",
-          },
-        },
-        spa: {
-          type: "traffic",
-          label: "How busy is it?",
-          opts: ["Quiet", "Moderate", "Busy"],
-          default: "quiet",
-          moodMap: { quiet: "green", moderate: "cool", busy: "cool" },
-        },
-        // hotel → weather
-        hotel: {
-          type: "weather",
-          label: "Weather outside",
-          opts: ["Sunny", "Cloudy", "Rainy", "Cold"],
-          default: "sunny",
-          moodMap: {
-            sunny: "warm",
-            cloudy: "cool",
-            rainy: "cool",
-            cold: "night",
-          },
-        },
-        // gym → intensity / time
-        gym: {
-          type: "intensity",
-          label: "Workout intensity",
-          opts: ["Warm-up", "Training", "Peak", "Cool-down"],
-          default: "training",
-          moodMap: {
-            "warm-up": "green",
-            training: "cool",
-            peak: "night",
-            "cool-down": "green",
-          },
-        },
-      };
+const CTX_CONFIG = {
+  // retail, restaurant, café, spa  → traffic
+  retail:     { type:'traffic', label:'How busy is it?',      opts:['Quiet','Moderate','Busy','Rush hour'], default:'moderate', moodMap:{ quiet:'cool', moderate:'warm', busy:'warm', rush:'night' } },
+  restaurant: { type:'traffic', label:'How busy is it?',      opts:['Quiet','Moderate','Busy','Rush hour'], default:'moderate', moodMap:{ quiet:'cool', moderate:'warm', busy:'warm', rush:'night' } },
+  cafe:       { type:'traffic', label:'How busy is it?',      opts:['Quiet','Moderate','Busy','Rush hour'], default:'moderate', moodMap:{ quiet:'cool', moderate:'warm', busy:'warm', rush:'night' } },
+  spa:        { type:'traffic', label:'How busy is it?',      opts:['Quiet','Moderate','Busy'],             default:'quiet',    moodMap:{ quiet:'green', moderate:'cool', busy:'cool' } },
+  // hotel → weather
+  hotel:      { type:'weather', label:'Weather outside',      opts:['Sunny','Cloudy','Rainy','Cold'],       default:'sunny',    moodMap:{ sunny:'warm', cloudy:'cool', rainy:'cool', cold:'night' } },
+  // gym → intensity / time
+  gym:        { type:'intensity', label:'Workout intensity',  opts:['Warm-up','Training','Peak','Cool-down'], default:'training', moodMap:{ 'warm-up':'green', training:'cool', peak:'night', 'cool-down':'green' } },
+};
 
-      function getConfig() {
-        return CTX_CONFIG[state.venueType] || CTX_CONFIG["restaurant"];
-      }
+function getConfig() {
+  return CTX_CONFIG[state.venueType] || CTX_CONFIG['restaurant'];
+}
 
-      const TRAFFIC_VENUES = new Set(["restaurant", "retail", "cafe"]);
+const TRAFFIC_VENUES = new Set(['restaurant', 'retail', 'cafe']);
 
-      function renderCtxControl() {
-        const cfg = getConfig();
-        const isTrafficVenue = TRAFFIC_VENUES.has(state.venueType);
-        const heroTraffic = document.getElementById("hero-traffic");
-        const contextTray = document.querySelector(".context-tray");
+function renderCtxControl() {
+  const cfg = getConfig();
+  const isTrafficVenue = TRAFFIC_VENUES.has(state.venueType);
+  const heroTraffic = document.getElementById('hero-traffic');
 
-        if (isTrafficVenue) {
-          // Show hero traffic above orb, hide bottom tray
-          heroTraffic.classList.add("visible");
-          contextTray.classList.add("hidden");
-          // Sync active button to current ctxValue (default: moderate)
-          state.ctxValue = state.ctxValue || cfg.default;
-          document.querySelectorAll(".hero-opt").forEach((btn) => {
-            btn.classList.toggle("on", btn.dataset.v === state.ctxValue);
-          });
-        } else {
-          // Non-traffic venue: hide hero control, show bottom tray
-          heroTraffic.classList.remove("visible");
-          contextTray.classList.remove("hidden");
-          // Build bottom tray opts
-          document.getElementById("ctx-handle-word").textContent = cfg.label;
-          const group = document.getElementById("ctx-active-group");
-          const optsHtml = cfg.opts
-            .map((o) => {
-              const v = o.toLowerCase().replace(/\s+/g, "-");
-              return `<button class="ctx-opt${
-                v === cfg.default ? " on" : ""
-              }" data-v="${v}" onclick="selCtx(this)">${o}</button>`;
-            })
-            .join("");
-          group.innerHTML = `<div class="ctx-opts">${optsHtml}</div>`;
-          state.ctxValue = cfg.default;
-        }
-        updatePeek();
-      }
+  if (isTrafficVenue) {
+    heroTraffic.classList.add('visible');
+    state.ctxValue = state.ctxValue || cfg.default;
+    document.querySelectorAll('.hero-opt').forEach(btn => {
+      btn.classList.toggle('on', btn.dataset.v === state.ctxValue);
+    });
+  } else {
+    // Hotel / gym / spa — no visible context control.
+    // Weather & atmosphere handled silently by setWeatherFromTime().
+    heroTraffic.classList.remove('visible');
+  }
+}
 
-      function selHeroOpt(el) {
-        document
-          .querySelectorAll(".hero-opt")
-          .forEach((b) => b.classList.remove("on"));
-        el.classList.add("on");
-        state.ctxValue = el.dataset.v;
-        updatePeek();
-        const cfg = getConfig();
-        const orbKey = cfg.moodMap[state.ctxValue] || "warm";
-        const moodCls = {
-          warm: "mood-warm",
-          cool: "mood-cool",
-          green: "mood-green",
-          night: "mood-night",
-        }[orbKey];
-        const sp = document.getElementById("s-player");
-        sp.classList.remove(
-          "mood-warm",
-          "mood-cool",
-          "mood-green",
-          "mood-night"
-        );
-        sp.classList.add(moodCls);
-        document.getElementById("orb-core").className = "orb-core " + orbKey;
-        setTimeout(() => {
-          state.trackIdx = (state.trackIdx + 1) % TRACKS.length;
-          loadTrack(state.trackIdx);
-          toast("Music is adapting.", true);
-        }, 700);
-      }
+function selHeroOpt(el) {
+  document.querySelectorAll('.hero-opt').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  state.ctxValue = el.dataset.v;
+  updatePeek();
+  const cfg = getConfig();
+  const orbKey = cfg.moodMap[state.ctxValue] || 'warm';
+  const moodCls = { warm:'mood-warm', cool:'mood-cool', green:'mood-green', night:'mood-night' }[orbKey];
+  const sp = document.getElementById('s-player');
+  sp.classList.remove('mood-warm','mood-cool','mood-green','mood-night');
+  sp.classList.add(moodCls);
+  const _core = document.getElementById('orb-core'); if (_core) _core.className = 'orb-core ' + orbKey;
+  setTimeout(() => {
+    state.trackIdx = (state.trackIdx + 1) % TRACKS.length;
+    loadTrack(state.trackIdx);
+    toast('Music is adapting.', true);
+  }, 700);
+}
 
-      function toggleCtx() {
-        state.ctxOpen = !state.ctxOpen;
-        document
-          .getElementById("ctx-expand")
-          .classList.toggle("open", state.ctxOpen);
-      }
+function updatePeek() {} // context tray removed — no-op
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-      function selCtx(el) {
-        document
-          .querySelectorAll("#ctx-active-group .ctx-opt")
-          .forEach((c) => c.classList.remove("on"));
-        el.classList.add("on");
-        state.ctxValue = el.dataset.v;
-        updatePeek();
-        const cfg = getConfig();
-        const orbKey = cfg.moodMap[state.ctxValue] || "warm";
-        const moodCls = {
-          warm: "mood-warm",
-          cool: "mood-cool",
-          green: "mood-green",
-          night: "mood-night",
-        }[orbKey];
-        const sp = document.getElementById("s-player");
-        sp.classList.remove(
-          "mood-warm",
-          "mood-cool",
-          "mood-green",
-          "mood-night"
-        );
-        sp.classList.add(moodCls);
-        document.getElementById("orb-core").className = "orb-core " + orbKey;
-        setTimeout(() => {
-          state.trackIdx = (state.trackIdx + 1) % TRACKS.length;
-          loadTrack(state.trackIdx);
-          toast("Music is adapting.", true);
-        }, 700);
-      }
+/* ── Settings ── */
+function selSgBrand(el) {
+  el.closest('.sg-brand-row').querySelectorAll('.sg-brand-opt').forEach(o => o.classList.remove('on'));
+  el.classList.add('on');
+  toast('Brand level updated.', true);
+}
+function onToggle(el, label) {
+  toast(`${label} turned ${el.checked ? 'on' : 'off'}.`, el.checked);
+}
+function editName() {
+  const n = prompt('Rename venue:', state.venueName);
+  if (n && n.trim()) {
+    state.venueName = n.trim();
+    document.getElementById('sg-vname').textContent = state.venueName;
+    document.getElementById('ptb-venue-name').textContent = state.venueName;
+    toast('Venue name updated.', true);
+  }
+}
+function signOut() { toast('Signed out.'); setTimeout(() => goTo('login'), 800); }
 
-      function updatePeek() {
-        const el = document.getElementById("ctx-peek-val");
-        if (!el) return;
-        const heroActive = document.querySelector(".hero-opt.on");
-        const trayActive = document.querySelector(
-          "#ctx-active-group .ctx-opt.on"
-        );
-        const active = heroActive || trayActive;
-        el.textContent = active
-          ? active.textContent
-          : cap(state.ctxValue || "moderate");
-      }
-      function cap(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
-      }
+/* ── Modal ── */
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function doDelete() { closeModal(); toast('Venue deleted.'); setTimeout(() => goTo('onboard'), 900); }
 
-      /* ── Settings ── */
-      function selSgBrand(el) {
-        el.closest(".sg-brand-row")
-          .querySelectorAll(".sg-brand-opt")
-          .forEach((o) => o.classList.remove("on"));
-        el.classList.add("on");
-        toast("Brand level updated.", true);
-      }
-      function onToggle(el, label) {
-        toast(`${label} turned ${el.checked ? "on" : "off"}.`, el.checked);
-      }
-      function editName() {
-        const n = prompt("Rename venue:", state.venueName);
-        if (n && n.trim()) {
-          state.venueName = n.trim();
-          document.getElementById("sg-vname").textContent = state.venueName;
-          document.getElementById("ptb-venue-name").textContent =
-            state.venueName;
-          toast("Venue name updated.", true);
-        }
-      }
-      function signOut() {
-        toast("Signed out.");
-        setTimeout(() => goTo("login"), 800);
-      }
+/* ── Toast ── */
+let toastTimer;
+function toast(msg, good) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = good ? 'rgba(49,217,154,0.12)' : '';
+  el.style.borderColor = good ? 'rgba(49,217,154,0.25)' : '';
+  el.style.color = good ? 'var(--jade)' : '';
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    el.classList.remove('show');
+    el.style.background = el.style.borderColor = el.style.color = '';
+  }, 3000);
+}
 
-      /* ── Modal ── */
-      function openModal() {
-        document.getElementById("modal").classList.add("open");
-      }
-      function closeModal() {
-        document.getElementById("modal").classList.remove("open");
-      }
-      function doDelete() {
-        closeModal();
-        toast("Venue deleted.");
-        setTimeout(() => goTo("onboard"), 900);
-      }
+/* ── Background visualizer engine ── */
+(function initBgViz() {
+  const canvas = document.getElementById('bg-viz');
+  if (!canvas) return;
 
-      /* ── Toast ── */
-      let toastTimer;
-      function toast(msg, good) {
-        const el = document.getElementById("toast");
-        el.textContent = msg;
-        el.style.background = good ? "rgba(49,217,154,0.12)" : "";
-        el.style.borderColor = good ? "rgba(49,217,154,0.25)" : "";
-        el.style.color = good ? "var(--jade)" : "";
-        el.classList.add("show");
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          el.classList.remove("show");
-          el.style.background = el.style.borderColor = el.style.color = "";
-        }, 3000);
-      }
+  let paused = false;
 
-      /* ── Boot ── */
-      renderCtxControl();
-      updatePeek();
-      startProg();
-      applyMood(TRACKS[0]);
-    </script>
-  </body>
+  function resize() {
+    canvas.width  = window.innerWidth * 2;
+    canvas.height = 320;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const ctx = canvas.getContext('2d');
+  const BAR_COUNT = 80;
+
+  const bars = Array.from({ length: BAR_COUNT }, () => ({
+    phase: Math.random() * Math.PI * 2,
+    speed: 0.012 + Math.random() * 0.014,
+    amp:   0.25  + Math.random() * 0.55,
+    base:  0.06  + Math.random() * 0.08,
+  }));
+
+  const MOOD_COLORS = {
+    'mood-warm':  [242, 188,  82],
+    'mood-cool':  [ 91, 168, 232],
+    'mood-green': [ 49, 217, 154],
+    'mood-night': [168, 130, 232],
+  };
+  function getMoodRGB() {
+    const sp = document.getElementById('s-player');
+    for (const [cls, rgb] of Object.entries(MOOD_COLORS)) {
+      if (sp && sp.classList.contains(cls)) return rgb;
+    }
+    return [242, 188, 82];
+  }
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const [r, g, b] = getMoodRGB();
+    const BAR_W = Math.ceil(W / BAR_COUNT);
+
+    bars.forEach((bar, i) => {
+      if (!paused) bar.phase += bar.speed;
+      const norm = bar.base + (paused ? 0 : Math.abs(Math.sin(bar.phase)) * bar.amp);
+      const barH = Math.max(2, norm * H * 0.85);
+      const x = i * BAR_W;
+      const y = (H - barH) / 2;
+
+      const grad = ctx.createLinearGradient(x, y, x, y + barH);
+      grad.addColorStop(0,   `rgba(${r},${g},${b},0)`);
+      grad.addColorStop(0.3, `rgba(${r},${g},${b},${0.5 + norm * 0.4})`);
+      grad.addColorStop(0.5, `rgba(${r},${g},${b},${0.7 + norm * 0.3})`);
+      grad.addColorStop(0.7, `rgba(${r},${g},${b},${0.5 + norm * 0.4})`);
+      grad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, y, Math.max(1, BAR_W - 1), barH);
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  // Sync with play/pause state
+  document.addEventListener('moodplay:pause', () => {
+    paused = true; canvas.style.opacity = '0.07';
+  });
+  document.addEventListener('moodplay:play', () => {
+    paused = false; canvas.style.opacity = '0.18';
+  });
+
+  draw();
+})();
+
+/* ── Boot ── */
+renderCtxControl();
+updatePeek();
+startProg();
+applyMood(TRACKS[0]);
+setWeatherFromTime();
+</script>
+</body>
 </html>
